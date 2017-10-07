@@ -1,0 +1,6 @@
+--------------------
+Publikacja daneIBE 0.1.0 (07.10.2017)
+
+Nowe funkcje:
+- zastosuj_codebook();
+- labelled_na_foreigndta().
