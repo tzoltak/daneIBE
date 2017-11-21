@@ -1,4 +1,12 @@
 --------------------
+Publikacja daneIBE 0.1.1 (30.10.2017)
+
+Naprawione błędy:
+- zastosuj_codebook() używa wartości kolumny 'opis' z codebooka, gdy kolumna
+  'krotki opis' jest pusta;
+- labelled_na_foreigndata() zachowuje etykiety wartości dla wszystkich zmiennych.
+
+--------------------
 Publikacja daneIBE 0.1.0 (07.10.2017)
 
 Nowe funkcje:

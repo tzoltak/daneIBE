@@ -76,6 +76,9 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
             !any(duplicated(naBrakiDanych)),
             is.character(pusteCiagiZnakow) | is.na(pusteCiagiZnakow))
 
+  etykietyZmiennych = sapply(x, function(x) {
+    return(ifelse("label" %in% names(attributes(x)), attributes(x)$label, ""))})
+
   maskaString = sapply(x, is.character)
   x[maskaString] = lapply(x[maskaString], function(x, pusteCiagiZnakow) {
     return(ifelse(x %in% "", pusteCiagiZnakow, x))},
@@ -112,9 +115,6 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
   }, naBrakiDanych = naBrakiDanych)
   # koniec zbędnego trudu
 
-  etykietyZmiennych = sapply(x, function(x) {
-    return(ifelse("label" %in% names(attributes(x)), attributes(x)$label, ""))})
-
   # w praktyce trzeba to zrobić tak
   x[zEtykietami] = lapply(x[zEtykietami], function(x, zwpp, naBrakiDanych) {
     poziomy = sort(unique(c(x, attributes(x)$labels)))
@@ -143,7 +143,7 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
     return(x)
   }, zwpp = zachowajWartosciPustymiPoziomami, naBrakiDanych = naBrakiDanych)
 
-  attributes(x)$datalabel = "Przygotowano w pakiecie daneIBE."
+  attributes(x)$datalabel = "Przygotowano w pakiecie daneIBE"
   attributes(x)$time.stamp = format(Sys.time(), "%d %B %Y %X")
   attributes(x)$val.labels = names(x)
   attributes(x)$var.labels = etykietyZmiennych
