@@ -34,6 +34,7 @@ zastosuj_codebook = function(dane, codebook, encoding = "windows-1250",
 
   codebook = read.csv2(codebook, stringsAsFactors = FALSE, encoding = encoding)
   names(codebook) = tolower(names(codebook))
+  names(codebook) = sub(" zmiennej$", "", names(codebook))
   names(codebook) = sub("krótki", "krotki", names(codebook))
   names(codebook) = sub("słowa", "slowa", names(codebook))
   names(codebook) = sub("dokładność", "dokladnosc", names(codebook))
@@ -41,10 +42,10 @@ zastosuj_codebook = function(dane, codebook, encoding = "windows-1250",
   names(codebook) = sub("(wartość[.]|)minimalna", "min", names(codebook))
   names(codebook) = sub("(wartość[.]|)maksymalna", "max", names(codebook))
 
-  codebook$opis = ifelse(is.na(codebook$krotki.opis) | codebook$krotki.opis == "",
-                         codebook$opis, codebook$krotki.opis)
   stopifnot(all(c("nazwa", "opis", "krotki.opis", "min", "max", "etykiety") %in%
                   names(codebook)))
+  codebook$opis = ifelse(is.na(codebook$krotki.opis) | codebook$krotki.opis == "",
+                         codebook$opis, codebook$krotki.opis)
 
   dane = read.csv2(dane, stringsAsFactors = FALSE, encoding = encoding)
 

@@ -1,5 +1,12 @@
 --------------------
-Publikacja daneIBE 0.1.1 (30.10.2017)
+daneIBE 0.1.12 (22.11.2017)
+
+Udoskonalenia:
+- zastosuj_codebook() nieco bardziej wyrozumiała wobec nazw kolumn w pliku
+  z codebookiem.
+
+--------------------
+daneIBE 0.1.1 (30.10.2017)
 
 Naprawione błędy:
 - zastosuj_codebook() używa wartości kolumny 'opis' z codebooka, gdy kolumna
