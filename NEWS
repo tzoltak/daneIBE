@@ -1,5 +1,12 @@
 --------------------
-daneIBE 0.1.12 (22.11.2017)
+daneIBE 0.2.0 (5.12.2017)
+
+Nowe funkcje:
+- tab() generuje rozkład(y) liczebności i częstości jednej zmiennej w ramach
+  tej samej tabeli, w miarę możliwości wykorzystując też etykiety wartości.
+
+--------------------
+daneIBE 0.1.2 (22.11.2017)
 
 Udoskonalenia:
 - zastosuj_codebook() nieco bardziej wyrozumiała wobec nazw kolumn w pliku
