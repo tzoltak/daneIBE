@@ -2,7 +2,7 @@
 #' @description
 #' Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -
 #' uwzględniając etykiety wartości.
-#' @param x obiekt klasy \code{labelled}
+#' @param x obiekt klasy \code{labelled} lub wektor
 #' @param procenty wartość logiczna - czy wyświetlić również rozkład częstości?
 #' @param d liczba całkowita - liczba miejsc dziesiętnych, z jaką raportowane
 #' będą procenty (argument jest ignowowany, jeśli \code{procenty} równe
@@ -12,9 +12,10 @@
 #' ignorowany, jeśli \code{suma} równe \code{FALSE})
 #' @return data.frame z rozkładami
 #' @importFrom stats setNames
+#' @importFrom haven is.labelled
 #' @export
 tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE") {
-  stopifnot(is.vector(x),
+  stopifnot(is.vector(x) | is.labelled(x),
             is.logical(procenty), length(procenty) == 1,
             is.numeric(d), length(d) == 1,
             is.logical(suma), length(suma) == 1,

@@ -3,6 +3,7 @@
 export(labelled_na_foreigndta)
 export(tab)
 export(zastosuj_codebook)
+importFrom(haven,is.labelled)
 importFrom(haven,labelled_spss)
 importFrom(stats,setNames)
 importFrom(utils,read.csv2)
