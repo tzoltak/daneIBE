@@ -1,4 +1,4 @@
-#' @title Tabela z rozkładem dla zmiennych etykietowanych
+#' @title Tabela z rozkladem dla zmiennych etykietowanych
 #' @description
 #' Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -
 #' uwzględniając etykiety wartości.

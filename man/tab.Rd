@@ -2,12 +2,12 @@
 % Please edit documentation in R/tab.R
 \name{tab}
 \alias{tab}
-\title{Tabela z rozkładem dla zmiennych etykietowanych}
+\title{Tabela z rozkladem dla zmiennych etykietowanych}
 \usage{
 tab(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 }
 \arguments{
-\item{x}{obiekt klasy \code{labelled}}
+\item{x}{obiekt klasy \code{labelled} lub wektor}
 
 \item{procenty}{wartość logiczna - czy wyświetlić również rozkład częstości?}
 

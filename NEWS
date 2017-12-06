@@ -1,4 +1,13 @@
 --------------------
+daneIBE 0.3.0 (6.12.2017)
+
+Nowe funkcje:
+- metody funkcji labels() dla ramek danych, list i obiektów klasy labelled
+  i funkcja value_labesl(), a także powiązane z wynikami ich działania metody
+  funkcji print() pozwalają na wygodny dostęp do etykiet zmiennych i etykiet
+  wartości.
+
+--------------------
 daneIBE 0.2.0 (5.12.2017)
 
 Nowe funkcje:
