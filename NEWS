@@ -1,3 +1,6 @@
+DO ZROBIENIA:
+- dopisać metodę cbind() dla obiektów zwracanych przez tab();
+
 --------------------
 daneIBE 0.3.0 (6.12.2017)
 

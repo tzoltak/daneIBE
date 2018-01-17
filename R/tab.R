@@ -15,7 +15,7 @@
 #' @importFrom haven is.labelled
 #' @export
 tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE") {
-  stopifnot(is.vector(x) | is.labelled(x),
+  stopifnot(is.numeric(x) | is.integer(x) | is.character(x) | is.labelled(x) | is.factor(x),
             is.logical(procenty), length(procenty) == 1,
             is.numeric(d), length(d) == 1,
             is.logical(suma), length(suma) == 1,
@@ -48,9 +48,15 @@ tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE
     tab = merge(data.frame("etykieta" = names(attributes(x)$labels),
                            x = unname(attributes(x)$labels),
                            stringsAsFactors = FALSE),
-                tab, all.y = TRUE)
+                tab, all = TRUE)
+    tab$Freq[is.na(tab$Freq)] = 0
+    tab$pr[is.na(tab$pr)] = paste0(format(0, nsmall = d), "%")
     tab = tab[order(as.numeric(tab$x)), ]
     tab$etykieta[is.na(tab$etykieta)] = ""
+    # obejście ew. problemów z kodowaniem etykiet
+    if (any(is.na(nchar(tab$etykieta, "chars", TRUE)))) {
+      Encoding(tab$etykieta) = sub("^[^.]*[.]", "", Sys.getlocale("LC_COLLATE"))
+    }
     tab$etykieta = format(tab$etykieta, width = max(nchar(tab$etykieta)))
     if (suma) {
       sum$etykieta = "ŁĄCZNIE"
