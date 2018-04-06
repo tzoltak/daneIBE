@@ -27,8 +27,8 @@
 #' @details
 #' Zapis danych do formatu DTA poprzez funkcję \code{\link[foreign]{write.dta}}
 #' został sklepany dosyć siermiężnie i jako etapu pośredniego wymaga konwersji
-#' zmiennych \emph{etkietowanych} na \emph{czynniki}. Jeśli wartości, którym
-#' przypisano etykiety nie są cięgiem kolejnych (poczynając od 1) liczb
+#' zmiennych \emph{etykietowanych} na \emph{czynniki}. Jeśli wartości, którym
+#' przypisano etykiety nie są ciągiem kolejnych (poczynając od 1) liczb
 #' naturalnych, wiąże się to albo z koniecznością pogodzenia się z tym, że
 #' w zapisanym (tu: przygotowanym do zapisu) zbiorze nie będą zgadzać się z tymi,
 #' jakie występowały w pierwotnym zbiorze, albo brzydko obchodzić ten problem
@@ -42,7 +42,7 @@
 #'
 #' Warto odnotować, że jeśli argument
 #' \code{zachowajWartosciPustymiPoziomami=TRUE}, funkcja będzie czynić zło, tzn.
-#' towrzyć \emph{czynniki} ze zduplikowanymi wartościami poziomów (co w zasadzie
+#' tworzyć \emph{czynniki} ze zduplikowanymi wartościami poziomów (co w zasadzie
 #' jest niedozwolone).
 #'
 #' Po zapisaniu zbioru funkcją \code{\link[foreign]{write.dta}} (należy pamiętać
@@ -81,8 +81,15 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
 
   maskaString = sapply(x, is.character)
   x[maskaString] = lapply(x[maskaString], function(x, pusteCiagiZnakow) {
-    return(ifelse(x %in% "", pusteCiagiZnakow, x))},
+    return(ifelse(x %in% "", pusteCiagiZnakow, enc2native(x)))},
     pusteCiagiZnakow = pusteCiagiZnakow)
+
+  # walka z kodowaniem etykiet
+  maskaFactory = sapply(x, is.factor)
+  x[maskaFactory] = lapply(x[maskaFactory], function(x) {
+    levels(x) = enc2native(levels(x))
+    return(x)
+  })
 
   naBrakiDanych = lapply(naBrakiDanych, function(x) {
     return(tolower(gsub("[[:blank:][:cntrl:][:punct:][:space:]]", "", x)))})
@@ -95,8 +102,13 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
       return(FALSE)
     }
   })
+  x[zEtykietami] = lapply(x[zEtykietami], function(x) {
+    names(attributes(x)$labels) = enc2native(names(attributes(x)$labels))
+    return(x)
+  })
   labelTable = lapply(x[zEtykietami], function(x) {
-    return(attributes(x)$labels)})
+    return(attributes(x)$labels)
+  })
   missing = lapply(x, function(x, naBrakiDanych) {
     y = ifelse(is.na(x), 0, NA)
     for (i in 1:length(naBrakiDanych)) {
@@ -146,7 +158,7 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
   attributes(x)$datalabel = "Przygotowano w pakiecie daneIBE"
   attributes(x)$time.stamp = format(Sys.time(), "%d %B %Y %X")
   attributes(x)$val.labels = names(x)
-  attributes(x)$var.labels = etykietyZmiennych
+  attributes(x)$var.labels = enc2native(etykietyZmiennych)
   attributes(x)$version = 10L
   attributes(x)$label.table = labelTable # zbędny trud
   attributes(x)$missing = missing # zbędny trud
