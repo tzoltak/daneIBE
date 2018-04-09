@@ -24,6 +24,9 @@
 #' @param pusteCiagiZnakow ciąg znaków, na który zostaną zamienione puste ciągi
 #' znaków w zmiennych tekstowych (Stata nie jest w stanie zapisać pustego ciągu
 #' znaków jako wartości zmiennej tekstowej)
+#' @param utf8 wartość logiczna - czy etykiety w wynikowym obiekcie mają być
+#' zakodowane w UTF-8? jeśli nie, wykorzystane zostanie domyślne kodowanie
+#' aktywnej sesji R (typowo kodowanie systemowe)
 #' @details
 #' Zapis danych do formatu DTA poprzez funkcję \code{\link[foreign]{write.dta}}
 #' został sklepany dosyć siermiężnie i jako etapu pośredniego wymaga konwersji
@@ -65,16 +68,18 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
                                   naBrakiDanych = list(. = c("brak odpowiedzi",
                                                              "odmowa odpowiedzi",
                                                              "nie dotyczy", "ndt.")),
-                                  pusteCiagiZnakow = ".") {
+                                  pusteCiagiZnakow = ".", utf8 = TRUE) {
   stopifnot(is.data.frame(x),
             is.logical(zachowajWartosciPustymiPoziomami),
             length(zachowajWartosciPustymiPoziomami) == 1,
             is.list(naBrakiDanych),
-            length(pusteCiagiZnakow) == 1)
+            length(pusteCiagiZnakow) == 1,
+            is.logical(utf8), length(utf8) == 1)
   stopifnot(zachowajWartosciPustymiPoziomami %in% c(TRUE, FALSE),
             all(names(naBrakiDanych) %in% paste0(".", c("", letters))),
             !any(duplicated(naBrakiDanych)),
-            is.character(pusteCiagiZnakow) | is.na(pusteCiagiZnakow))
+            is.character(pusteCiagiZnakow) | is.na(pusteCiagiZnakow),
+            utf8 %in% c(TRUE, FALSE))
 
   etykietyZmiennych = sapply(x, function(x) {
     return(ifelse("label" %in% names(attributes(x)), attributes(x)$label, ""))})
@@ -86,10 +91,17 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
 
   # walka z kodowaniem etykiet
   maskaFactory = sapply(x, is.factor)
-  x[maskaFactory] = lapply(x[maskaFactory], function(x) {
-    levels(x) = enc2native(levels(x))
-    return(x)
-  })
+  if (utf8) {
+    x[maskaFactory] = lapply(x[maskaFactory], function(x) {
+      levels(x) = enc2utf8(levels(x))
+      return(x)
+    })
+  } else {
+    x[maskaFactory] = lapply(x[maskaFactory], function(x) {
+      levels(x) = enc2native(levels(x))
+      return(x)
+    })
+  }
 
   naBrakiDanych = lapply(naBrakiDanych, function(x) {
     return(tolower(gsub("[[:blank:][:cntrl:][:punct:][:space:]]", "", x)))})
@@ -102,10 +114,17 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
       return(FALSE)
     }
   })
-  x[zEtykietami] = lapply(x[zEtykietami], function(x) {
-    names(attributes(x)$labels) = enc2native(names(attributes(x)$labels))
-    return(x)
-  })
+  if (utf8) {
+    x[zEtykietami] = lapply(x[zEtykietami], function(x) {
+      names(attributes(x)$labels) = enc2utf8(names(attributes(x)$labels))
+      return(x)
+    })
+  } else {
+    x[zEtykietami] = lapply(x[zEtykietami], function(x) {
+      names(attributes(x)$labels) = enc2native(names(attributes(x)$labels))
+      return(x)
+    })
+  }
   labelTable = lapply(x[zEtykietami], function(x) {
     return(attributes(x)$labels)
   })
@@ -158,7 +177,11 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
   attributes(x)$datalabel = "Przygotowano w pakiecie daneIBE"
   attributes(x)$time.stamp = format(Sys.time(), "%d %B %Y %X")
   attributes(x)$val.labels = names(x)
-  attributes(x)$var.labels = enc2native(etykietyZmiennych)
+  if (utf8) {
+    attributes(x)$var.labels = enc2utf8(etykietyZmiennych)
+  } else {
+    attributes(x)$var.labels = enc2native(etykietyZmiennych)
+  }
   attributes(x)$version = 10L
   attributes(x)$label.table = labelTable # zbędny trud
   attributes(x)$missing = missing # zbędny trud

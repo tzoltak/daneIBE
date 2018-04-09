@@ -7,7 +7,7 @@ sie zapisac do pliku DTA}
 \usage{
 labelled_na_foreigndta(x, zachowajWartosciPustymiPoziomami = FALSE,
   naBrakiDanych = list(. = c("brak odpowiedzi", "odmowa odpowiedzi",
-  "nie dotyczy", "ndt.")), pusteCiagiZnakow = ".")
+  "nie dotyczy", "ndt.")), pusteCiagiZnakow = ".", utf8 = TRUE)
 }
 \arguments{
 \item{x}{ramka danych ze zmiennymi \emph{etykietowanymi}}
@@ -29,6 +29,10 @@ nazwa elemntu listy podaje rodzaj braku danych (".", ".a", ... ".z")}
 \item{pusteCiagiZnakow}{ciąg znaków, na który zostaną zamienione puste ciągi
 znaków w zmiennych tekstowych (Stata nie jest w stanie zapisać pustego ciągu
 znaków jako wartości zmiennej tekstowej)}
+
+\item{utf8}{wartość logiczna - czy etykiety w wynikowym obiekcie mają być
+zakodowane w UTF-8? jeśli nie, wykorzystane zostanie domyślne kodowanie
+aktywnej sesji R (typowo kodowanie systemowe)}
 }
 \value{
 data.frame ze zmiennymi \emph{etykietowanymi} przekształconymi na
@@ -47,8 +51,8 @@ w miarę bezproblemowo zapisać do formatu DTA korzystając z funkcji
 \details{
 Zapis danych do formatu DTA poprzez funkcję \code{\link[foreign]{write.dta}}
 został sklepany dosyć siermiężnie i jako etapu pośredniego wymaga konwersji
-zmiennych \emph{etkietowanych} na \emph{czynniki}. Jeśli wartości, którym
-przypisano etykiety nie są cięgiem kolejnych (poczynając od 1) liczb
+zmiennych \emph{etykietowanych} na \emph{czynniki}. Jeśli wartości, którym
+przypisano etykiety nie są ciągiem kolejnych (poczynając od 1) liczb
 naturalnych, wiąże się to albo z koniecznością pogodzenia się z tym, że
 w zapisanym (tu: przygotowanym do zapisu) zbiorze nie będą zgadzać się z tymi,
 jakie występowały w pierwotnym zbiorze, albo brzydko obchodzić ten problem
@@ -62,7 +66,7 @@ wartości to dodatnie liczby całkowite.
 
 Warto odnotować, że jeśli argument
 \code{zachowajWartosciPustymiPoziomami=TRUE}, funkcja będzie czynić zło, tzn.
-towrzyć \emph{czynniki} ze zduplikowanymi wartościami poziomów (co w zasadzie
+tworzyć \emph{czynniki} ze zduplikowanymi wartościami poziomów (co w zasadzie
 jest niedozwolone).
 
 Po zapisaniu zbioru funkcją \code{\link[foreign]{write.dta}} (należy pamiętać
