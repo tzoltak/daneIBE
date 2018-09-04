@@ -78,9 +78,14 @@ zastosuj_codebook = function(dane, codebook, encoding = "windows-1250",
         (codebook$max[j] != "" & !is.na(codebook$max[j]))) {
       etykiety = strsplit(codebook$etykiety[j], "\n")[[1]]
       etykiety = strsplit(etykiety, ":( |)")
-      etykiety = setNames(sapply(etykiety, function(x) {return(as.numeric(x[1]))}),
-                          sapply(etykiety, function(x) {return(paste(x[2:length(x)],
-                                                                     sep = ": "))}))
+      nazwyEtykiet = sapply(etykiety, function(x) {return(paste(x[2:length(x)],
+                                                                sep = ": "))})
+      if (grepl("liczba", tolower(codebook$typ[j]))) {
+        etykiety = sapply(etykiety, function(x) {return(as.numeric(x[1]))})
+      } else {
+        etykiety = sapply(etykiety, function(x) {return(x[1])})
+      }
+      etykiety = setNames(etykiety, nazwyEtykiet)
       if (length(etykiety) == 0) {
         etykiety = setNames(vector(mode = "numeric", length = 0),
                             vector(mode = "character", length = 0))
@@ -114,7 +119,10 @@ zastosuj_codebook = function(dane, codebook, encoding = "windows-1250",
           }
         }
       }
-      dane[[i]] = labelled_spss(dane[[i]], etykiety, braki[!is.na(braki)])
+      if (!is.numeric(dane[[i]]) & !is.character(dane[[i]])) {
+        dane[[i]] = as.character(dane[[i]])
+      }
+      dane[[i]] = try(labelled_spss(dane[[i]], etykiety, braki[!is.na(braki)]))
     }
   }
   return(dane)
