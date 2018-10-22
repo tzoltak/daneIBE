@@ -83,6 +83,9 @@ labelled_na_foreigndta = function(x, zachowajWartosciPustymiPoziomami = FALSE,
 
   etykietyZmiennych = sapply(x, function(x) {
     return(ifelse("label" %in% names(attributes(x)), attributes(x)$label, ""))})
+  for (i in 1:ncol(x)) {
+    attributes(x[[i]]) = attributes(x[[i]])[!(names(attributes(x[[i]])) %in% "label")]
+  }
 
   maskaString = sapply(x, is.character)
   x[maskaString] = lapply(x[maskaString], function(x, pusteCiagiZnakow) {
