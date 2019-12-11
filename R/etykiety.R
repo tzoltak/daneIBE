@@ -66,7 +66,7 @@ labels.list = function(object, SIMPLIFY = TRUE, ...) {
 }
 #' @rdname labels
 #' @export
-labels.labelled = function(object, ...) {
+labels.haven_labelled = function(object, ...) {
   if (is.null(attributes(object))) {
     return(NULL)
   }
@@ -85,13 +85,17 @@ value_labels = function(object, ...) {
 #' @rdname labels
 #' @export
 value_labels.data.frame = function(object, ...) {
-  return(lapply(object, function(x) {
-    if ("labelled" %in% class(x)) {
-      return(labels(x))
+  object = lapply(object, function(x) {
+    if ("labelled" %in% class(x) | "haven_labelled" %in% class(x)) {
+      x = attributes(x)$labels
+      class(x) = c("val_labels", "labels", class(x))
+      return(x)
     } else {
       return(NULL)
     }
-  }))
+  })
+  class(object) = c("val_labels_list", class(object))
+  return(object)
 }
 #' @rdname labels
 #' @export
@@ -99,9 +103,15 @@ value_labels.default = function(object, ...) {
   return(labels(object, ...))
 }
 #' @rdname labels
-#' @param x obiekt klasy \emph{var_labels} lub  \emph{val_labels}
 #' @export
-print.var_labels = function(x, ...) {
+`[.val_labels_list` = function(x, ...) {
+  x = NextMethod("[")
+  class(x) = c("val_labels_list", class(x))
+  return(x)
+}
+#' @rdname labels
+#' @export
+as.data.frame.var_labels = function(x, ...) {
   if (is.list(x)) {
     x = lapply(x, function(x) {
       if (is.null(x)) {
@@ -111,16 +121,54 @@ print.var_labels = function(x, ...) {
       }
     })
   }
-  x = data.frame(label = x, row.names = names(x))
-  print(x, right = FALSE)
+  x = data.frame(variable = names(x), label = unclass(x), row.names = NULL,
+                 stringsAsFactors = FALSE)
+  return(x)
+}
+#' @rdname labels
+#' @export
+as.data.frame.val_labels = function(x, ...) {
+  x = data.frame(value = unclass(x), label = names(x), row.names = NULL,
+                 stringsAsFactors = FALSE)
+  return(x)
+}
+#' @rdname labels
+#' @param x obiekt klasy \emph{var_labels}, \emph{var_labels} lub \emph{val_labels_list}
+#' @export
+print.var_labels = function(x, ...) {
+  print(as.data.frame(x), right = FALSE, row.names = TRUE)
   invisible(x)
 }
 #' @rdname labels
 #' @export
 print.val_labels = function(x, ...) {
-  x = data.frame(value = x, label = as.character(names(x)))
-  x$label = format(x$label,
-                   width = max(nchar(c(" ", x$label)), na.rm = TRUE))
-  print(x, row.names = FALSE)
+  print(as.data.frame(x), right = FALSE, row.names = FALSE)
+  invisible(x)
+}
+#' @rdname labels
+#' @export
+print.val_labels_list = function(x, ...) {
+  stopifnot(is.list(x))
+  if (length(x) > 0) {
+    cat("$", names(x)[1], sep = "")
+    labels = x[[1]]
+  }
+  if (length(x) == 1) {
+    cat("\n")
+    print(labels)
+  } else {
+    for (i in 2:length(x)) {
+      if (isTRUE(all.equal(labels, x[[i]]))) {
+        cat(", $", names(x)[i], sep = "")
+      } else {
+        cat("\n")
+        print(labels)
+        cat("\n$", names(x)[i], sep = "")
+        labels = x[[i]]
+      }
+    }
+    cat("\n")
+    print(labels)
+  }
   invisible(x)
 }

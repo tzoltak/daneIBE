@@ -2,6 +2,16 @@ DO ZROBIENIA:
 - dopisać metodę cbind() dla obiektów zwracanych przez tab();
 
 --------------------
+daneIBE 0.4.0 (11.12.2019)
+
+Aktualizacje:
+- funkcje i metody działające na etykietach współpracują z pakietem haven
+  w wersjach >= 2.0.0 (tj. odwołują się do klasy "haven_labelled").
+
+Udoskonalenia:
+- metoda print() dla listy etykiet wartości zmiennych.
+
+--------------------
 daneIBE 0.3.1 (4.09.2018)
 
 Poprawione błędy:

@@ -4,8 +4,12 @@
 \alias{zastosuj_codebook}
 \title{Utworzenie ramki danych ze zmiennymi etykietowanymi z pliku CSV}
 \usage{
-zastosuj_codebook(dane, codebook, encoding = "windows-1250",
-  etykietyBrakowDanych = "")
+zastosuj_codebook(
+  dane,
+  codebook,
+  encoding = "windows-1250",
+  etykietyBrakowDanych = ""
+)
 }
 \arguments{
 \item{dane}{nazwa (ścieżka) do pliku CSV z danymi}

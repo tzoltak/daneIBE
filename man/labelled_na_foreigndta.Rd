@@ -5,9 +5,14 @@
 \title{Konwersja ramki danych ze zmiennymi etykietowanymi do postaci dajacej
 sie zapisac do pliku DTA}
 \usage{
-labelled_na_foreigndta(x, zachowajWartosciPustymiPoziomami = FALSE,
-  naBrakiDanych = list(. = c("brak odpowiedzi", "odmowa odpowiedzi",
-  "nie dotyczy", "ndt.")), pusteCiagiZnakow = ".", utf8 = TRUE)
+labelled_na_foreigndta(
+  x,
+  zachowajWartosciPustymiPoziomami = FALSE,
+  naBrakiDanych = list(. = c("brak odpowiedzi", "odmowa odpowiedzi", "nie dotyczy",
+    "ndt.")),
+  pusteCiagiZnakow = ".",
+  utf8 = TRUE
+)
 }
 \arguments{
 \item{x}{ramka danych ze zmiennymi \emph{etykietowanymi}}

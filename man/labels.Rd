@@ -4,19 +4,23 @@
 \alias{labels}
 \alias{labels.data.frame}
 \alias{labels.list}
-\alias{labels.labelled}
+\alias{labels.haven_labelled}
 \alias{value_labels}
 \alias{value_labels.data.frame}
 \alias{value_labels.default}
+\alias{[.val_labels_list}
+\alias{as.data.frame.var_labels}
+\alias{as.data.frame.val_labels}
 \alias{print.var_labels}
 \alias{print.val_labels}
+\alias{print.val_labels_list}
 \title{Operacje na etykietach zmiennych i etykietach wartosci}
 \usage{
 \method{labels}{data.frame}(object, SIMPLIFY = TRUE, ...)
 
 \method{labels}{list}(object, SIMPLIFY = TRUE, ...)
 
-\method{labels}{labelled}(object, ...)
+\method{labels}{haven_labelled}(object, ...)
 
 value_labels(object, ...)
 
@@ -24,9 +28,17 @@ value_labels(object, ...)
 
 \method{value_labels}{default}(object, ...)
 
+\method{[}{val_labels_list}(x, ...)
+
+\method{as.data.frame}{var_labels}(x, ...)
+
+\method{as.data.frame}{val_labels}(x, ...)
+
 \method{print}{var_labels}(x, ...)
 
 \method{print}{val_labels}(x, ...)
+
+\method{print}{val_labels_list}(x, ...)
 }
 \arguments{
 \item{object}{obiekt potencjalnie posiadający zdefiniowane etykiety zmiennych
@@ -37,7 +49,7 @@ jako wektor? (jeśli \code{FALSE}, zostaną zwrócone jako lista)}
 
 \item{...}{wyłącznie dla zachowania zgodności z funkcją \emph{generic}}
 
-\item{x}{obiekt klasy \emph{var_labels} lub  \emph{val_labels}}
+\item{x}{obiekt klasy \emph{var_labels}, \emph{var_labels} lub \emph{val_labels_list}}
 }
 \value{
 Funkcja \code{labels} (wywołana na obiektach udokumentowanych tu
