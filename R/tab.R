@@ -2,7 +2,9 @@
 #' @description
 #' Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -
 #' uwzględniając etykiety wartości.
-#' @param x obiekt klasy \code{labelled} lub wektor
+#' @param x obiekt klasy \code{labelled}, wektor lub ramka danych
+#' @param ... tylko jeśli \code{x} jest ramką danych - kolumna, której rozkład
+#' ma zostać wygenerowany
 #' @param procenty wartość logiczna - czy wyświetlić również rozkład częstości?
 #' @param d liczba całkowita - liczba miejsc dziesiętnych, z jaką raportowane
 #' będą procenty (argument jest ignowowany, jeśli \code{procenty} równe
@@ -11,10 +13,28 @@
 #' @param etykietaSuma ciąg znaków - etykieta dla wiersza z sumą (argument jest
 #' ignorowany, jeśli \code{suma} równe \code{FALSE})
 #' @return data.frame z rozkładami
+#' @name tab
+#' @export
+tab = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
+               etykietaSuma = "ŁĄCZNIE") {
+  UseMethod("tab")
+}
+#' @rdname tab
+#' @importFrom rlang ensyms
+#' @export
+tab.data.frame = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
+               etykietaSuma = "ŁĄCZNIE") {
+  zmienna = ensyms(...)
+  stopifnot(length(zmienna) == 1,
+            !!zmienna %in% names(x))
+  tab.default(x[[zmienna[[1]]]])
+}
+#' @rdname tab
 #' @importFrom stats setNames
 #' @importFrom haven is.labelled
 #' @export
-tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE") {
+tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
+                       etykietaSuma = "ŁĄCZNIE") {
   stopifnot(is.numeric(x) | is.integer(x) | is.character(x) | is.labelled(x) | is.factor(x),
             is.logical(procenty), length(procenty) == 1,
             is.numeric(d), length(d) == 1,
@@ -40,9 +60,6 @@ tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE
     nazwyKolumn = c("wartość", "liczebność")
   }
 
-  if ("label" %in% names(attributes(x))) {
-    cat(attributes(x)$label, "\n\n")
-  }
   if ("labels" %in% names(attributes(x))) {
     nazwyKolumn = c(nazwyKolumn[1], "etykieta", nazwyKolumn[-1])
     tab = merge(data.frame("etykieta" = names(attributes(x)$labels),
@@ -59,16 +76,26 @@ tab = function(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE
     }
     tab$etykieta = format(tab$etykieta, width = max(nchar(tab$etykieta)))
     if (suma) {
-      sum$etykieta = "ŁĄCZNIE"
+      sum$etykieta = etykietaSuma
     }
   } else {
-    sum$x = "suma"
+    sum$x = etykietaSuma
   }
   if (suma) {
     tab = rbind(tab, sum)
   }
   tab = setNames(tab, nazwyKolumn)
-  print(tab, row.names = FALSE)
+  if ("label" %in% names(attributes(x))) {
+    attributes(tab)$label = attributes(x)$label
+  }
   class(tab) = c("table_labeled", class(tab))
-  invisible(tab)
+  return(tab)
+}
+#' @rdname tab
+#' @export
+print.table_labeled = function(x, ...) {
+  if (!is.null(label(x))) {
+    cat(label(x), "\n\n")
+  }
+  NextMethod(row.names = FALSE)
 }

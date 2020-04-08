@@ -5,6 +5,8 @@
 \alias{labels.data.frame}
 \alias{labels.list}
 \alias{labels.haven_labelled}
+\alias{label}
+\alias{label.default}
 \alias{value_labels}
 \alias{value_labels.data.frame}
 \alias{value_labels.default}
@@ -21,6 +23,10 @@
 \method{labels}{list}(object, SIMPLIFY = TRUE, ...)
 
 \method{labels}{haven_labelled}(object, ...)
+
+label(object, ...)
+
+\method{label}{default}(object, ...)
 
 value_labels(object, ...)
 

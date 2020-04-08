@@ -2,12 +2,24 @@
 % Please edit documentation in R/tab.R
 \name{tab}
 \alias{tab}
+\alias{tab.data.frame}
+\alias{tab.default}
+\alias{print.table_labeled}
 \title{Tabela z rozkladem dla zmiennych etykietowanych}
 \usage{
-tab(x, procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+
+\method{tab}{data.frame}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+
+\method{tab}{default}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+
+\method{print}{table_labeled}(x, ...)
 }
 \arguments{
-\item{x}{obiekt klasy \code{labelled} lub wektor}
+\item{x}{obiekt klasy \code{labelled}, wektor lub ramka danych}
+
+\item{...}{tylko jeśli \code{x} jest ramką danych - kolumna, której rozkład
+ma zostać wygenerowany}
 
 \item{procenty}{wartość logiczna - czy wyświetlić również rozkład częstości?}
 

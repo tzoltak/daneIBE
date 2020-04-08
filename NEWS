@@ -2,19 +2,37 @@ DO ZROBIENIA:
 - dopisać metodę cbind() dla obiektów zwracanych przez tab();
 
 --------------------
+daneIBE 0.4.1 (8.04.2020)
+
+Nowe funkcje:
+
+- metoda tab() dla ramek danych (drugi argument wskazuje kolmnę, której rozkład
+  ma zostać wygenerowany - obsługuje "tidy evaluation"),
+- label() - zwraca etykietę przypisaną do wektora (do zastosowania w odniesieniu
+  do obiektu, który był kolumną ramki danych, ale został już z niej "wybrany").
+
+Udoskonalenia:
+
+- tab() nie drukuje tabeli na konsoli, lecz odpowiada za to metoda print()
+  zwracanego przez nią obiektu.
+
+--------------------
 daneIBE 0.4.0 (11.12.2019)
 
 Aktualizacje:
+
 - funkcje i metody działające na etykietach współpracują z pakietem haven
   w wersjach >= 2.0.0 (tj. odwołują się do klasy "haven_labelled").
 
 Udoskonalenia:
+
 - metoda print() dla listy etykiet wartości zmiennych.
 
 --------------------
 daneIBE 0.3.1 (4.09.2018)
 
 Poprawione błędy:
+
 - zastosuj_codebook() radzi sobie z kolumnami w wejściowym zbiorze, które
   wczytują się jako innego typu niż numeric lub character.
 
@@ -22,6 +40,7 @@ Poprawione błędy:
 daneIBE 0.3.0 (6.12.2017)
 
 Nowe funkcje:
+
 - metody funkcji labels() dla ramek danych, list i obiektów klasy labelled
   i funkcja value_labesl(), a także powiązane z wynikami ich działania metody
   funkcji print() pozwalają na wygodny dostęp do etykiet zmiennych i etykiet
@@ -31,6 +50,7 @@ Nowe funkcje:
 daneIBE 0.2.0 (5.12.2017)
 
 Nowe funkcje:
+
 - tab() generuje rozkład(y) liczebności i częstości jednej zmiennej w ramach
   tej samej tabeli, w miarę możliwości wykorzystując też etykiety wartości.
 
@@ -38,6 +58,7 @@ Nowe funkcje:
 daneIBE 0.1.2 (22.11.2017)
 
 Udoskonalenia:
+
 - zastosuj_codebook() nieco bardziej wyrozumiała wobec nazw kolumn w pliku
   z codebookiem.
 
@@ -45,6 +66,7 @@ Udoskonalenia:
 daneIBE 0.1.1 (30.10.2017)
 
 Naprawione błędy:
+
 - zastosuj_codebook() używa wartości kolumny 'opis' z codebooka, gdy kolumna
   'krotki opis' jest pusta;
 - labelled_na_foreigndata() zachowuje etykiety wartości dla wszystkich zmiennych.
@@ -53,5 +75,6 @@ Naprawione błędy:
 Publikacja daneIBE 0.1.0 (07.10.2017)
 
 Nowe funkcje:
+
 - zastosuj_codebook();
 - labelled_na_foreigndta().

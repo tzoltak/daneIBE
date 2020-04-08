@@ -79,6 +79,16 @@ labels.haven_labelled = function(object, ...) {
 }
 #' @rdname labels
 #' @export
+label = function(object, ...){
+  UseMethod("label", object)
+}
+#' @rdname labels
+#' @export
+label.default = function(object, ...) {
+  return(attributes(object)$label)
+}
+#' @rdname labels
+#' @export
 value_labels = function(object, ...) {
   UseMethod("value_labels", object)
 }
