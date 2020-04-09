@@ -23,11 +23,65 @@ tab = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
 #' @importFrom rlang ensyms
 #' @export
 tab.data.frame = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
-               etykietaSuma = "ŁĄCZNIE") {
+                          etykietaSuma = "ŁĄCZNIE") {
   zmienna = ensyms(...)
-  stopifnot(length(zmienna) == 1,
-            !!zmienna %in% names(x))
+  if (length(zmienna) == 0) stop("Nie podano zmiennej.")
+  if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
+  if (!(!!zmienna %in% names(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
   tab.default(x[[zmienna[[1]]]])
+}
+#' @rdname tab
+#' @importFrom rlang as_name
+#' @importFrom srvyr survey_count
+#' @export
+tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
+                       etykietaSuma = "ŁĄCZNIE") {
+  zmienna = ensyms(...)
+  if (length(zmienna) == 0) stop("Nie podano zmiennej.")
+  if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
+  zmienna = zmienna[[1]]
+  if (!(as_name(zmienna) %in% colnames(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
+  stopifnot(is.logical(procenty), length(procenty) == 1,
+            is.numeric(d), length(d) == 1,
+            is.logical(suma), length(suma) == 1,
+            is.character(etykietaSuma), length(etykietaSuma) == 1)
+  stopifnot(procenty %in% c(TRUE, FALSE),
+            as.integer(d) == d,
+            suma %in% c(TRUE, FALSE))
+
+  # workaround na to, że survey_count() nie radzi sobie ze zm. numerycznymi
+  label = label(x$variables[[as.name(zmienna)]])
+  valueLabels = value_labels(x$variables[[as.name(zmienna)]])
+  if (is.numeric(x$variables[[as.name(zmienna)]]) |
+      is.logical(x$variables[[as.name(zmienna)]])) {
+    konwersja = class(x$variables[[as.name(zmienna)]])
+    x$variables[[as.name(zmienna)]] =
+      as.character(x$variables[[as.name(zmienna)]])
+  } else {
+    konwersja = NA_character_
+  }
+  # koniec I cz. workaroundu
+  tab = suppressWarnings(
+    survey_count(x, !!zmienna, name = "Freq", vartype = NULL))
+  names(tab)[1] = 'x'
+  tab = as.data.frame(tab, stringsAsFactors = FALSE)
+  # II cz. workaroundu
+  if (!is.na(konwersja)) {
+    tab$x = do.call(paste0("as.", konwersja), list(x = tab$x))
+  }
+  # koniec workaroundu
+  r = sum(round(tab$Freq, 0)) - round(sum(tab$Freq), 0)
+  if (r > 0) {
+    maska = order(((tab$Freq + 0.5) %% 1))[1:r]
+    tab$Freq[maska] = floor(tab$Freq[maska])
+  } else if (r < 0) {
+    maska = order(-((tab$Freq + 0.5) %% 1))[1:abs(r)]
+    tab$Freq[maska] = ceiling(tab$Freq[maska])
+  }
+  tab$Freq = round(tab$Freq, 0)
+  tab = sformatuj_rozklad(tab, label, valueLabels, procenty, d, suma,
+                          etykietaSuma)
+  return(tab)
 }
 #' @rdname tab
 #' @importFrom stats setNames
@@ -46,6 +100,23 @@ tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
 
   tab = table(x, exclude = NULL)
   tab = as.data.frame(tab, stringsAsFactors = FALSE)
+  tab = sformatuj_rozklad(tab, label(x), value_labels(x),
+                          procenty, d, suma, etykietaSuma)
+  return(tab)
+}
+#' @rdname tab
+#' @export
+print.table_labeled = function(x, ...) {
+  if (!is.null(label(x))) {
+    cat(label(x), "\n\n")
+  }
+  NextMethod(row.names = FALSE)
+}
+# nieeksportowana funkcja odpowiadajaca za obudowanie rozkładu liczebności
+# wszystkim, czego trzeba
+sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
+                             procenty = TRUE, d = 1, suma = TRUE,
+                             etykietaSuma = "ŁĄCZNIE") {
   if (suma) {
     sum = data.frame(x = "", Freq = sum(tab$Freq))
   }
@@ -60,15 +131,15 @@ tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
     nazwyKolumn = c("wartość", "liczebność")
   }
 
-  if ("labels" %in% names(attributes(x))) {
+  if (!is.null(value_labels)) {
     nazwyKolumn = c(nazwyKolumn[1], "etykieta", nazwyKolumn[-1])
-    tab = merge(data.frame("etykieta" = names(attributes(x)$labels),
-                           x = unname(attributes(x)$labels),
+    tab = merge(data.frame("etykieta" = names(value_labels),
+                           x = unname(value_labels),
                            stringsAsFactors = FALSE),
                 tab, all = TRUE)
     tab$Freq[is.na(tab$Freq)] = 0
     tab$pr[is.na(tab$pr)] = paste0(format(0, nsmall = d), "%")
-    tab = tab[order(as.numeric(tab$x)), ]
+    tab = tab[order(tab$x), ]
     tab$etykieta[is.na(tab$etykieta)] = ""
     # obejście ew. problemów z kodowaniem etykiet
     if (any(is.na(nchar(tab$etykieta, "chars", TRUE)))) {
@@ -85,17 +156,9 @@ tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
     tab = rbind(tab, sum)
   }
   tab = setNames(tab, nazwyKolumn)
-  if ("label" %in% names(attributes(x))) {
-    attributes(tab)$label = attributes(x)$label
+  if (!is.null(label)) {
+    attributes(tab)$label = label
   }
   class(tab) = c("table_labeled", class(tab))
   return(tab)
-}
-#' @rdname tab
-#' @export
-print.table_labeled = function(x, ...) {
-  if (!is.null(label(x))) {
-    cat(label(x), "\n\n")
-  }
-  NextMethod(row.names = FALSE)
 }

@@ -7,7 +7,8 @@ Description: Funkcje pomagające przetwarzać dane sondażowe pomiędzy formatam
 Depends:
   R (>= 3.6.0),
   haven (>= 2.2.0),
-  rlang (>= 0.4.5)
+  rlang (>= 0.4.5),
+  srvyr (>= 0.3.8)
 Suggests:
   foreign,
   knitr,

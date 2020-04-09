@@ -43,7 +43,7 @@ Funkcja `tab()`, wywołana na pojedynczej zmiennej (kolumnie) obiektu *data.fram
 - liczebności,
 - procenty.
 
-Może też zostać wywołana na obiekcie *data.frame* z podaniem zmiennej (kolumny), której rozkład ma być wygenerowany przy pomocy drugiego argumentu (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsłuje *tidy evaluation*).
+Może też zostać wywołana na obiekcie *data.frame* lub obiekcie *tbl_svy* (czyli obiekcie będącym połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzonym przez funkcje pakietu *srvyr*) z podaniem zmiennej (kolumny), której rozkład ma być wygenerowany przy pomocy drugiego argumentu (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsłuje *tidy evaluation*).
 
 Ograniczenie zmiennej stanowi fakt, że nie pozwala ona uwzględnić ważenia, ani tworzyć rozkładów warunkowych.
 

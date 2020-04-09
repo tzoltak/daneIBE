@@ -2,12 +2,13 @@ DO ZROBIENIA:
 - dopisać metodę cbind() dla obiektów zwracanych przez tab();
 
 --------------------
-daneIBE 0.4.1 (8.04.2020)
+daneIBE 0.5.0 (9.04.2020)
 
 Nowe funkcje:
 
 - metoda tab() dla ramek danych (drugi argument wskazuje kolmnę, której rozkład
   ma zostać wygenerowany - obsługuje "tidy evaluation"),
+- metoda tab() dla obiektów tbl_svy tworzonych przez pakiet svysrv (API identyczne, jak w metodzie dla ramek danych),
 - label() - zwraca etykietę przypisaną do wektora (do zastosowania w odniesieniu
   do obiektu, który był kolumną ramki danych, ale został już z niej "wybrany").
 

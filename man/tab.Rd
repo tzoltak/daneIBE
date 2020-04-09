@@ -3,6 +3,7 @@
 \name{tab}
 \alias{tab}
 \alias{tab.data.frame}
+\alias{tab.tbl_svy}
 \alias{tab.default}
 \alias{print.table_labeled}
 \title{Tabela z rozkladem dla zmiennych etykietowanych}
@@ -10,6 +11,8 @@
 tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 
 \method{tab}{data.frame}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+
+\method{tab}{tbl_svy}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 
 \method{tab}{default}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 

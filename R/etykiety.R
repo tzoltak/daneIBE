@@ -110,7 +110,7 @@ value_labels.data.frame = function(object, ...) {
 #' @rdname labels
 #' @export
 value_labels.default = function(object, ...) {
-  return(labels(object, ...))
+  return(attributes(object)$labels)
 }
 #' @rdname labels
 #' @export
