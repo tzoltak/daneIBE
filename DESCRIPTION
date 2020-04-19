@@ -3,9 +3,7 @@ Title: Funkcje wspomagajace przetwarzanie danych sondazowych
 Version: 0.6.0
 Authors@R: 
   person("Tomasz", "Żółtak", email = "tomek@zozlak.org", role = c("aut", "cre"))
-Description: Funkcje wspomagajęce przetwarzanie danych sondażowych,
-w szczególności pewne elemnty pracy ze zmiennymi etykietowanymi i szybkie
-tworzenie rozkładów zmiennych.
+Description: Funkcje wspomagajęce przetwarzanie danych sondażowych.
 Depends:
   R (>= 3.6.0),
   dplyr (>= 0.8.5),
