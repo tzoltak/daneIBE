@@ -83,6 +83,9 @@ mtcars$carb[1:2] = NA
 tab2(mtcars, carb, cyl, "k")
 tab2(mtcars, carb, cyl, "k", etykietaBD = "brak danych")
 
+# choć hp jako wagi obserwacji są bez sensu
+tab2(mtcars, carb, cyl, "k", w = hp)
+
 as.data.frame(tab2(mtcars, cyl, carb, "k"))
 ```
 
