@@ -1,5 +1,7 @@
 # daneIBE
 
+Funkcje wspomagajęce przetwarzanie danych sondażowych, w szczególności pewne elemnty pracy ze zmiennymi etykietowanymi i szybkie tworzenie rozkładów zmiennych.
+
 ## Instalacja
 
 Zakładając, że masz zainstalowany pakiet *remotes* (jeśli nie, zainstaluj go: `install.pcakges("remotes")`), wywołaj w konsoli R:
