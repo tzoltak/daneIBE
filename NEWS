@@ -1,14 +1,32 @@
-DO ZROBIENIA:
-- dopisać metodę cbind() dla obiektów zwracanych przez tab();
+--------------------
+daneIBE 0.6.0 (19.04.2020)
+
+Nowe funkcje:
+
+- tab2() pozwala tworzyć łączne rozkłady liczebności i łączne rozkłady częstości
+  lub rodziny warunkowych rozkładów częstości dwóch zmiennych:
+  - posiada metody dla ramek danych i obiektów tbl_svy;
+  - wskazywanie kolumn, których rozkład ma zostać obliczony obsługuje
+    "tidy evaluation";
+  - pozwala uwzględnić ważenie, również w metodzie dla ramki danych;
+- metoda as.data.frame dla obiektów zwracanych przez tab2() - pozwala
+  przekształcić je do postaci długiej, przydatnej np. do tworzenia wykresów
+  w ggplot2;
+- funkcja label()<- pozwalająca przypisać wartość atrybutowi "label" obiektu.
+
+Udoskonalenia:
+
+- Uzupełniona dokumentacja i plik README.md.
 
 --------------------
 daneIBE 0.5.0 (9.04.2020)
 
 Nowe funkcje:
 
-- metoda tab() dla ramek danych (drugi argument wskazuje kolmnę, której rozkład
+- metoda tab() dla ramek danych (drugi argument wskazuje kolumnę, której rozkład
   ma zostać wygenerowany - obsługuje "tidy evaluation"),
-- metoda tab() dla obiektów tbl_svy tworzonych przez pakiet svysrv (API identyczne, jak w metodzie dla ramek danych),
+- metoda tab() dla obiektów tbl_svy tworzonych przez pakiet srvyr (API
+  identyczne, jak w metodzie dla ramek danych),
 - label() - zwraca etykietę przypisaną do wektora (do zastosowania w odniesieniu
   do obiektu, który był kolumną ramki danych, ale został już z niej "wybrany").
 
@@ -43,7 +61,7 @@ daneIBE 0.3.0 (6.12.2017)
 Nowe funkcje:
 
 - metody funkcji labels() dla ramek danych, list i obiektów klasy labelled
-  i funkcja value_labesl(), a także powiązane z wynikami ich działania metody
+  i funkcja value_labels(), a także powiązane z wynikami ich działania metody
   funkcji print() pozwalają na wygodny dostęp do etykiet zmiennych i etykiet
   wartości.
 

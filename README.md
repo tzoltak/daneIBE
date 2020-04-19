@@ -1,10 +1,92 @@
 # daneIBE
 
-Pakiet zawiera następujące grupy funkcji:
+## Instalacja
 
-## Funkcje wspomagające eksplorację danych ze zmiennymi etykietowanymi wczytanych przy pomocy pakietu *haven*
+Zakładając, że masz zainstalowany pakiet *remotes* (jeśli nie, zainstaluj go: `install.pcakges("remotes")`), wywołaj w konsoli R:
 
-### Etykiety zmiennych
+```{r}
+remotes::install_github("tzoltak/daneIBE")
+```
+
+Aby załadować zainstalowany pakiet do danej sesji R, wywołaj:
+
+```{r}
+library(daneIBE)
+```
+
+## Funkcje pakietu
+
+### Tabele z rozkładami
+
+**Funkcja `tab()`:**
+
+Funkcja `tab()` tworzy tabelę z rozkładem liczebności i rozkładem częstości jednej zmiennej. 
+
+Jest przeznaczona przede wszystkim do analiz eksploracyjnych z wykorzystaniem zmiennych *etykietowanych* - pozwala obejrzeć ich rozkład, wraz z mapowaniem wartości-etykiety bez konieczności konwertowania ich na inny typ zmiennej. Na *normalnych
+
+Może być wywołana na:
+
+- wektorze (w tym *czynniku*),
+- *ramce danych*,
+- obiekcie *tbl_svy* (czyli obiekcie będącym połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzonym przez funkcje pakietu *srvyr*);
+  - pozwala to uwzględnić ważenie.
+
+W przypadku drugiego i trzeciego z ww. drugim argumentem podaje się zmienną (kolumnę), której rozkład ma być wygenerowany (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsługuje *tidy evaluation*).
+
+Przykład użycia:
+
+```{r}
+tab(mtcars$cyl)
+tab(mtcars, cyl)
+tab(mtcars, cyl, d = 2, etykietaSuma = "Sum")
+
+library(haven)
+mtcars$cyl = labelled(mtcars$cyl, c("cztery" = 4, "sześć" = 6, "osiem" = 8),
+                      "liczba cylindrów")
+tab(mtcars, cyl)
+```
+
+**Funkcja `tab2()`:**
+
+Funkcja generuje rozkład łączny liczebności i rozkład łączny lub rodzinę warunkowych rozkładów częstości dwóch zmiennych. Jako pierwszy argument przyjmuje *ramkę danych* lub obiekt *tbl_svy* (będący połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzony przez funkcje pakietu *srvyr*). Radzi też sobie ze zmiennymi etykietowanymi (konwertując je na *czynniki*).
+
+Metoda `as.data.frame` pozwala przekształcić zwracane zestawienie w *ramkę danych* (ściśle w *tibble*) w postaci *długiej*, przydatną np. do rysowania wykresów przy pomocy *ggplot2* (czyli działa analogicznie, jak metoda `as.data.frame` dla obiektów zwracanych przez funkcję `table` z pakietu *base*).
+
+Argumenty:
+
+1. *Ramka danych* lub obiekt *tbl_svy*.
+2. Zmienna, której wartości mają zostać umieszczone w wierszach tabeli.
+3. Zmienna, której wartości mają zostać umieszczone w kolumnach tabeli.
+4. Kierunek procentowania (w wywołaniu funkcji wystarczy podać pierwszą literę):
+   - "brak" (domyślnie),
+   - "kolumny",
+   - "wiersze",
+   - "ogółem".
+5. Dalsze argumenty - p. dokumentacja (aby ją obejrzeć wywołaj: `?tab2`).
+
+Przykłady użycia:
+
+```{r}
+library(haven)
+mtcars$cyl = labelled(mtcars$cyl, c("cztery" = 4, "sześć" = 6, "osiem" = 8),
+                      "liczba cylindrów")
+tab2(mtcars, carb, cyl, "k")
+tab2(mtcars, carb, cyl, "w")
+tab2(mtcars, carb, cyl, "o")
+tab2(mtcars, carb, cyl)
+tab2(mtcars, carb, cyl, "k", liczby = FALSE)
+tab2(mtcars, carb, cyl, "k", procenty = FALSE)
+tab2(mtcars, carb, cyl, "k", etykietaSuma = "Suma")
+mtcars$carb[1:2] = NA
+tab2(mtcars, carb, cyl, "k")
+tab2(mtcars, carb, cyl, "k", etykietaBD = "brak danych")
+
+as.data.frame(tab2(mtcars, cyl, carb, "k"))
+```
+
+### Funkcje wspomagające pracę ze zmiennymi etykietowanymi wczytanych przy pomocy pakietu *haven*
+
+#### Etykiety zmiennych
 
 **Funkcja `labels()`:**
 
@@ -19,7 +101,13 @@ Obiekt zwrócony przez funkcję `labels()` (efekt działania tej funkcji) można
 
 **Funkcja `label()`:**
 
-Wywołana na pojedynczej zmiennej (kolumnie) obiektu *data.frame* zwraca etykietę tej zmiennej (co do zasady jednoelementowy wektor tekstowy).
+Wywołana na pojedynczej zmiennej (kolumnie) obiektu *data.frame* zwraca etykietę tej zmiennej (zwykle jednoelementowy wektor tekstowy).
+
+Możliwe jest też przypisanie etykiety zmiennej, z wykorzystaniem składni:
+
+```{r}
+label(ramka_danych$kolumna) = "etykieta"
+```
 
 **Funkcja `value_labels()`:**
 
@@ -33,21 +121,7 @@ Obiekt zwrócony przez funkcję `value_labels()` (efekt działania tej funkcji) 
 
 Funkcja `value_labels()` może też zostać wywołana na pojedynczej zmiennej (kolumnie) obiektu *data.frame* - będzie wtedy działać, jak funkcja `labels()`.
 
-### Tabela z rozkładem (i etykietami)
-
-Funkcja `tab()`, wywołana na pojedynczej zmiennej (kolumnie) obiektu *data.frame* wyświetla tabelę z rozkładem tej zmiennej uwzględniającą (jeśli elementy te zostały zdefiniowane):
-
-- etykietę zmiennej,
-- wartości,
-- etykiety wartości,
-- liczebności,
-- procenty.
-
-Może też zostać wywołana na obiekcie *data.frame* lub obiekcie *tbl_svy* (czyli obiekcie będącym połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzonym przez funkcje pakietu *srvyr*) z podaniem zmiennej (kolumny), której rozkład ma być wygenerowany przy pomocy drugiego argumentu (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsłuje *tidy evaluation*).
-
-Ograniczenie zmiennej stanowi fakt, że nie pozwala ona uwzględnić ważenia, ani tworzyć rozkładów warunkowych.
-
-## Inne funkcje
+### Inne funkcje
 
 Funkcja `zastosuj_codebook()` pozwala tworzyć obiekty *data.frame* zawierające etykiety zmiennych i etykiety wartości na podstawie zbiorów w formacie .csv i powiązanych z nimi codebooków przygotowanych w formacie, który kiedyś był wykorzystywany w IBE.
 

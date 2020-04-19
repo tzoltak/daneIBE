@@ -2,9 +2,10 @@
 #' @description
 #' Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -
 #' uwzględniając etykiety wartości.
-#' @param x obiekt klasy \code{labelled}, wektor lub ramka danych
-#' @param ... tylko jeśli \code{x} jest ramką danych - kolumna, której rozkład
-#' ma zostać wygenerowany
+#' @param x obiekt klasy \code{labelled}, wektor, ramka danych lub obiekt
+#' klasy \code{tbl_svy}
+#' @param ... tylko jeśli \code{x} jest \emph{ramką danych} - kolumna, której
+#' rozkład ma zostać wygenerowany
 #' @param procenty wartość logiczna - czy wyświetlić również rozkład częstości?
 #' @param d liczba całkowita - liczba miejsc dziesiętnych, z jaką raportowane
 #' będą procenty (argument jest ignowowany, jeśli \code{procenty} równe
@@ -12,7 +13,7 @@
 #' @param suma wartość logiczna - czy wyświetlić wiersz z sumą?
 #' @param etykietaSuma ciąg znaków - etykieta dla wiersza z sumą (argument jest
 #' ignorowany, jeśli \code{suma} równe \code{FALSE})
-#' @return data.frame z rozkładami
+#' @return \code{data.frame} (klasy \code{tab_lbl}) z rozkładami
 #' @name tab
 #' @export
 tab = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
@@ -28,7 +29,7 @@ tab.data.frame = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
   if (length(zmienna) == 0) stop("Nie podano zmiennej.")
   if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
   if (!(!!zmienna %in% names(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
-  tab.default(x[[zmienna[[1]]]])
+  tab.default(x[[zmienna[[1]]]], procenty, d, suma, etykietaSuma)
 }
 #' @rdname tab
 #' @importFrom rlang as_name
@@ -106,7 +107,7 @@ tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
 }
 #' @rdname tab
 #' @export
-print.table_labeled = function(x, ...) {
+print.tab_lbl = function(x, ...) {
   if (!is.null(label(x))) {
     cat(label(x), "\n\n")
   }
@@ -159,6 +160,6 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
   if (!is.null(label)) {
     attributes(tab)$label = label
   }
-  class(tab) = c("table_labeled", class(tab))
+  class(tab) = c("tab_lbl", class(tab))
   return(tab)
 }

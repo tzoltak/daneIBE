@@ -5,7 +5,7 @@
 \alias{tab.data.frame}
 \alias{tab.tbl_svy}
 \alias{tab.default}
-\alias{print.table_labeled}
+\alias{print.tab_lbl}
 \title{Tabela z rozkladem dla zmiennych etykietowanych}
 \usage{
 tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
@@ -16,13 +16,14 @@ tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 
 \method{tab}{default}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
 
-\method{print}{table_labeled}(x, ...)
+\method{print}{tab_lbl}(x, ...)
 }
 \arguments{
-\item{x}{obiekt klasy \code{labelled}, wektor lub ramka danych}
+\item{x}{obiekt klasy \code{labelled}, wektor, ramka danych lub obiekt
+klasy \code{tbl_svy}}
 
-\item{...}{tylko jeśli \code{x} jest ramką danych - kolumna, której rozkład
-ma zostać wygenerowany}
+\item{...}{tylko jeśli \code{x} jest \emph{ramką danych} - kolumna, której
+rozkład ma zostać wygenerowany}
 
 \item{procenty}{wartość logiczna - czy wyświetlić również rozkład częstości?}
 
@@ -36,7 +37,7 @@ będą procenty (argument jest ignowowany, jeśli \code{procenty} równe
 ignorowany, jeśli \code{suma} równe \code{FALSE})}
 }
 \value{
-data.frame z rozkładami
+\code{data.frame} (klasy \code{tab_lbl}) z rozkładami
 }
 \description{
 Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -

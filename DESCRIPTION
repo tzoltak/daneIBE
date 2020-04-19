@@ -1,14 +1,16 @@
 Package: daneIBE
 Title: Funkcje wspomagajace przetwarzanie danych sondazowych
-Version: 0.4.0
+Version: 0.6.0
 Authors@R: 
   person("Tomasz", "Żółtak", email = "tomek@zozlak.org", role = c("aut", "cre"))
 Description: Funkcje pomagające przetwarzać dane sondażowe pomiędzy formatami CSV, DTA i SAV.
 Depends:
   R (>= 3.6.0),
+  dplyr (>= 0.8.5),
   haven (>= 2.2.0),
   rlang (>= 0.4.5),
-  srvyr (>= 0.3.8)
+  srvyr (>= 0.3.8),
+  tidyr (>= 1.0.2)
 Suggests:
   foreign,
   knitr,

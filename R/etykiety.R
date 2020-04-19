@@ -1,12 +1,32 @@
+# Uwaga! Metody label() i labels() dla obiektów klasy "tab_lbl2" znajdują się
+# w pliku tab2.R.
 #' @title Operacje na etykietach zmiennych i etykietach wartosci
 #' @description
-#' Funkcja \code{labels} pozwala w wygodny sposób uzyskać dostęp do etykiet
-#' zmienych lub etykiet wartości pojedynczej zmiennej.
+#' Funkcje pozwalające w wygodny sposób uzyskać dostęp do etykiet zmienych lub
+#' etykiet wartości zarówno pojedynczej zmiennej, jak i zestawu zmiennych
+#' w \emph{ramce danych}:
+#' \itemize{
+#'   \item{\code{labels} - wywołana na \emph{ramce danych} zwraca etykiety jej
+#'         zmiennych; wywołana na obiekcie (kolumnie) klasy
+#'         \code{haven_labelled} zwraca jego etykiety wartości,}
+#'   \item{\code{label} - wywołana na obiekcie zwraca wartość jego atrybutu
+#'         \code{label} - w szczególności wywołana na pojedynczej kolumnie
+#'         \emph{ramki danych} zwraca jej etykietę zmiennej (jeśli istnieje),}
+#'   \item{\code{label(ramka_danych$kolumna)<-"etykieta"} - pozawala przypisać
+#'         wartość atrybutowi \code{label} obiektu - w szczególności wywołana na
+#'         pojedynczej kolumnie \emph{ramki danych} przypisać jej etykietę
+#'         zmiennej,}
+#'   \item{i \code{value_labels} - wywołana na \emph{ramce danych} zwraca
+#'         zestawienie etykiet wartości jej zmiennych;wywołana na obiekcie
+#'         (kolumnie) klasy \code{haven_labelled} zwraca jego etykiety
+#'         wartości.}
+#' }
 #' @param object obiekt potencjalnie posiadający zdefiniowane etykiety zmiennych
 #' lub etykiety wartości
 #' @param SIMPLIFY wartość logiczna - czy etykiety zmiennych mają być zwrócone
 #' jako wektor? (jeśli \code{FALSE}, zostaną zwrócone jako lista)
-#' @param ... wyłącznie dla zachowania zgodności z funkcją \emph{generic}
+#' @param ... wyłącznie dla zachowania zgodności ze wzorcem (\emph{generic})
+#' metody
 #' @return Funkcja \code{labels} (wywołana na obiektach udokumentowanych tu
 #' klas) zwraca listę lub wektor (z przypisaną klasą \emph{labels})
 #' @name labels
@@ -86,6 +106,19 @@ label = function(object, ...){
 #' @export
 label.default = function(object, ...) {
   return(attributes(object)$label)
+}
+#' @rdname labels
+#' @param value wartość, która ma zostać przypisana atrybutowi \code{label}
+#' obiektu (zwykle ciąg znaków, ale może to być dowolny obiekt)
+#' @export
+`label<-` = function(object, value){
+  UseMethod("label<-", object)
+}
+#' @rdname labels
+#' @export
+`label<-.default` = function(object, value) {
+  attributes(object)$label = value
+  return(object)
 }
 #' @rdname labels
 #' @export
