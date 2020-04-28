@@ -252,16 +252,18 @@ labels.tab_lbl2 = function(object, ...) {
 #' z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
 #' \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
 #' \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)
-#' @param row.names wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
-#' \code{as.data.frame}
-#' @param optional wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
-#' \code{as.data.frame}
+#' @param .rows wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+#' \code{as_tibble}
+#' @param .name.repair wyłącznie dla zgodności ze wzorcem (\emph{generic})
+#' metody \code{as_tibble}
+#' @param rownames wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+#' \code{as_tibble}
 #' @method as.data.frame tab_lbl2
 #' @importFrom tidyr pivot_longer
 #' @export
-as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
-                                  ..., usunSuma = FALSE, wartoscBD = NULL,
-                                  niePrzeksztalcaj = FALSE) {
+as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
+                              rownames = NULL, usunSuma = FALSE,
+                              wartoscBD = NULL, niePrzeksztalcaj = FALSE) {
   stopifnot(is.logical(niePrzeksztalcaj), length(niePrzeksztalcaj) == 1)
   stopifnot(niePrzeksztalcaj %in% c(TRUE, FALSE))
   if (niePrzeksztalcaj) {
@@ -353,6 +355,20 @@ as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
   x = x[, c("rozklad", kolejnoscKolumn, "value")]
   attributes(x)$label = atrybuty$label
   return(x)
+}
+#' @rdname tab2
+#' @param row.names wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+#' \code{as.data.frame}
+#' @param optional wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+#' \code{as.data.frame}
+#' @method as.data.frame tab_lbl2
+#' @importFrom tidyr as_tibble
+#' @export
+as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
+                                  ..., usunSuma = FALSE, wartoscBD = NULL,
+                                  niePrzeksztalcaj = FALSE) {
+  return(as.data.frame(as_tibble(x, usunSuma = usunSuma, wartoscBD = wartoscBD,
+                                 niePrzeksztalcaj = niePrzeksztalcaj)))
 }
 #' @export
 `[.tab_lbl2` = function(x, i, j, drop = TRUE) {

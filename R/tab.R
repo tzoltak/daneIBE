@@ -55,7 +55,7 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
   valueLabels = value_labels(x$variables[[as.name(zmienna)]])
   if (is.numeric(x$variables[[as.name(zmienna)]]) |
       is.logical(x$variables[[as.name(zmienna)]])) {
-    konwersja = class(x$variables[[as.name(zmienna)]])
+    konwersja = mode(x$variables[[as.name(zmienna)]])
     x$variables[[as.name(zmienna)]] =
       as.character(x$variables[[as.name(zmienna)]])
   } else {

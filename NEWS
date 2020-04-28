@@ -1,4 +1,19 @@
 --------------------
+daneIBE 0.6.1 (28.04.2020)
+
+Udoskonalenia:
+
+- obiekty zwracane przez tab2() otrzymały metodę as_tibble(), które zwraca
+  tibble, w odróżnieniu od metody as.data.frame(), która zwraca "base'ową"
+  ramkę danych - pozwala to uniknąć stosowania kuriozalnej składni z wywołaniem
+  as.data.frame() na wynikach wywołania as.data.frame(), żeby uzyskać "base'ową"
+  ramkę danych.
+
+Naprawione błędy:
+- tab() nie radzi sobie z przywróceniem typu, jaki miały wartości liczbowe
+  zmiennej klasy haven_labelled.
+
+--------------------
 daneIBE 0.6.0 (19.04.2020)
 
 Nowe funkcje:

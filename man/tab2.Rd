@@ -5,6 +5,7 @@
 \alias{tab2.data.frame}
 \alias{tab2.tbl_svy}
 \alias{print.tab_lbl2}
+\alias{as_tibble.tab_lbl2}
 \alias{as.data.frame.tab_lbl2}
 \title{Tabela z rodzina rozkladow warunkowych dwoch zmiennych (etykietowanych)}
 \usage{
@@ -36,6 +37,17 @@ tab2(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma, etykietaBD, ...)
 )
 
 \method{print}{tab_lbl2}(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",", ...)
+
+\method{as.data.frame}{tab_lbl2}(
+  x,
+  ...,
+  .rows = NULL,
+  .name.repair = NULL,
+  rownames = NULL,
+  usunSuma = FALSE,
+  wartoscBD = NULL,
+  niePrzeksztalcaj = FALSE
+)
 
 \method{as.data.frame}{tab_lbl2}(
   x,
@@ -91,11 +103,14 @@ jeśli przy tworzeniu rozkładu stosowano ważenie)}
 \item{decimal.mark}{znak miejsca dziesiętnego - przekazywany do
 \code{\link[base]{format}}}
 
-\item{row.names}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
-\code{as.data.frame}}
+\item{.rows}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+\code{as_tibble}}
 
-\item{optional}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
-\code{as.data.frame}}
+\item{.name.repair}{wyłącznie dla zgodności ze wzorcem (\emph{generic})
+metody \code{as_tibble}}
+
+\item{rownames}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+\code{as_tibble}}
 
 \item{usunSuma}{wartość logiczna - czy usunąć ze zwróconej ramki danych
 wiersze opisujące sumy w podgrupach?}
@@ -112,6 +127,12 @@ zmiennej prezentowanej w kolumnach}
 z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
 \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
 \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)}
+
+\item{row.names}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+\code{as.data.frame}}
+
+\item{optional}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
+\code{as.data.frame}}
 }
 \value{
 \strong{tab2}
