@@ -7,9 +7,18 @@ Udoskonalenia:
   "kolumny" lub "wiersze") zwraca również kolumnę/wiersz z rozkładame brzegowym
   zmiennej zależnej - etykietę kolumny/wiersza można podać argumentem
   `etykietaOgolem`, albo ustawić jego wartość na NA lub NULL, aby wskazać, że
-  zwrócony rozkład ma nie zawierać takiej kolumny/takiego wiersza
+  zwrócony rozkład ma nie zawierać takiej kolumny/takiego wiersza;
   - aby zmniejszyć ryzyko nieporozumień domyślną etykietę kolumny/wiersza sumy
-    zmieniono z "ŁĄCZNIE" na "SUMA".
+    zmieniono z "ŁĄCZNIE" na "SUMA";
+  - metody as_tibble() i as.data.frame() zyskały nowy argument usunLacznie,
+    który pozwala pozbyć się wierszy opisujących rozkład brzegowy zmiennej
+    zależnej ze zwracanej ramki danych.
+
+Naprawione błędy:
+
+- as_tibble() (i as.data.frame()) wywołane na obiekcie zwróconym przez tab2()
+  poprawnie radzą sobie z przywracaniem formatu zmiennej opisywanej w wierszach
+  tabeli (jeśli takie przywrócenie formatu jest możliwe).
 
 --------------------
 daneIBE 0.6.2 (5.05.2020)

@@ -58,8 +58,8 @@ tab2(
   .name.repair = NULL,
   rownames = NULL,
   usunSuma = FALSE,
-  wartoscBD = NULL,
-  niePrzeksztalcaj = FALSE
+  usunOgolem = FALSE,
+  wartoscBD = NULL
 )
 
 \method{as.data.frame}{tab_lbl2}(
@@ -68,6 +68,7 @@ tab2(
   optional = FALSE,
   ...,
   usunSuma = FALSE,
+  usunOgolem = FALSE,
   wartoscBD = NULL,
   niePrzeksztalcaj = FALSE
 )
@@ -135,6 +136,9 @@ metody \code{as_tibble}}
 \item{usunSuma}{wartość logiczna - czy usunąć ze zwróconej ramki danych
 wiersze opisujące sumy w podgrupach?}
 
+\item{usunOgolem}{wartość logiczna - czy usunąć ze zwróconej ramki danych
+wiersze opisujące rozkład brzegowy zmiennej zależnej?}
+
 \item{wartoscBD}{wektor jedno- lub dwuelementowy: wartości, przy pomocy
 których mają być reprezentowane ew. braki danych w zróconej ramce danych;
 jeśli zostanie podany tylko jeden element, zostanie użyty zarówno
@@ -143,16 +147,16 @@ prezentowanej w kolumnach; jeśli zostaną podane dwa elementy, pierwszy
 zostanie zastosowany do zmiennej prezentowanej w wierszach, a drugi do
 zmiennej prezentowanej w kolumnach}
 
-\item{niePrzeksztalcaj}{wartość logiczna - czy funkcja ma tylko usunąć
-z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
-\strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
-\emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)}
-
 \item{row.names}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 \code{as.data.frame}}
 
 \item{optional}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 \code{as.data.frame}}
+
+\item{niePrzeksztalcaj}{wartość logiczna - czy funkcja ma tylko usunąć
+z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
+\strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
+\emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)v}
 }
 \value{
 \strong{tab2}

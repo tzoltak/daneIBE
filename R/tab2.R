@@ -269,6 +269,8 @@ labels.tab_lbl2 = function(object, ...) {
 #' @rdname tab2
 #' @param usunSuma wartość logiczna - czy usunąć ze zwróconej ramki danych
 #' wiersze opisujące sumy w podgrupach?
+#' @param usunOgolem wartość logiczna - czy usunąć ze zwróconej ramki danych
+#' wiersze opisujące rozkład brzegowy zmiennej zależnej?
 #' @param wartoscBD wektor jedno- lub dwuelementowy: wartości, przy pomocy
 #' których mają być reprezentowane ew. braki danych w zróconej ramce danych;
 #' jeśli zostanie podany tylko jeden element, zostanie użyty zarówno
@@ -276,10 +278,6 @@ labels.tab_lbl2 = function(object, ...) {
 #' prezentowanej w kolumnach; jeśli zostaną podane dwa elementy, pierwszy
 #' zostanie zastosowany do zmiennej prezentowanej w wierszach, a drugi do
 #' zmiennej prezentowanej w kolumnach
-#' @param niePrzeksztalcaj wartość logiczna - czy funkcja ma tylko usunąć
-#' z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
-#' \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
-#' \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)
 #' @param .rows wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as_tibble}
 #' @param .name.repair wyłącznie dla zgodności ze wzorcem (\emph{generic})
@@ -290,15 +288,11 @@ labels.tab_lbl2 = function(object, ...) {
 #' @export
 as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
                               rownames = NULL, usunSuma = FALSE,
-                              wartoscBD = NULL, niePrzeksztalcaj = FALSE) {
-  stopifnot(is.logical(niePrzeksztalcaj), length(niePrzeksztalcaj) == 1)
-  stopifnot(niePrzeksztalcaj %in% c(TRUE, FALSE))
-  if (niePrzeksztalcaj) {
-    class(x) = "data.frame"
-    return(x)
-  }
-  stopifnot(is.logical(usunSuma), length(usunSuma) == 1)
-  stopifnot(usunSuma %in% c(TRUE, FALSE))
+                              usunOgolem = FALSE, wartoscBD = NULL) {
+  stopifnot(is.logical(usunSuma), length(usunSuma) == 1,
+            is.logical(usunOgolem), length(usunOgolem) == 1)
+  stopifnot(usunSuma %in% c(TRUE, FALSE),
+            usunOgolem %in% c(TRUE, FALSE))
   if (!is.null(wartoscBD)) {
     stopifnot(is.vector(wartoscBD), length(wartoscBD) %in% 1:2)
     if (length(wartoscBD) == 1) wartoscBD = rep(wartoscBD, 2)
@@ -314,10 +308,17 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
                    -1, names_to = c("rozklad", attributes(x)$nazwyZm$k),
                    names_pattern = "^(n_|pct_)(.*)$")
   x$rozklad = sub("_$", "", x$rozklad)
-  # ew. usuwanie wierszy sumy
-  if (usunSuma) {
+  # ew. usuwanie wierszy sumy i rozkładu brzegowego zm. zal.
+  if (usunSuma & !is.na(atrybuty$etykietaSuma)) {
     x = x[!(x[[atrybuty$nazwyZm$w]] %in% atrybuty$etykietaSuma), ]
     x = x[!(x[[atrybuty$nazwyZm$k]] %in% atrybuty$etykietaSuma), ]
+  }
+  if (usunOgolem & !is.na(atrybuty$etykietaOgolem)) {
+    if (atrybuty$sumowanie %in% "kolumny") {
+      x = x[!(x[[atrybuty$nazwyZm$k]] %in% atrybuty$etykietaOgolem), ]
+    } else if (atrybuty$sumowanie %in% "wiersze") {
+      x = x[!(x[[atrybuty$nazwyZm$w]] %in% atrybuty$etykietaOgolem), ]
+    }
   }
   # ew. zamiana wartości braków danych
   if (!is.null(wartoscBD$w)) {
@@ -342,12 +343,24 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
              x[[atrybuty$nazwyZm$k]])
   }
   # konwersja typów kolumn
-  if (atrybuty$klasyZm$w %in% c("integer", "numeric")) {
-    temp = unique(x[[atrybuty$nazwyZm$w]])
+  if (atrybuty$klasyZm$w %in% c("integer", "numeric") &
+      ((atrybuty$sumowanie %in% "ogółem" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
+       (atrybuty$sumowanie %in% "kolumny" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
+       (atrybuty$sumowanie %in% "wiersze" & (is.na(atrybuty$etykietaOgolem) | usunOgolem)))) {
+    # w przypadku zmiennej prezentowanej w wierszach trzeba obsłużyć czynniki
+    if (is.factor(x[[atrybuty$nazwyZm$w]])) {
+      temp = levels(x[[atrybuty$nazwyZm$w]])[unique(x[[atrybuty$nazwyZm$w]])]
+    } else {
+      temp = unique(x[[atrybuty$nazwyZm$w]])
+    }
     temp = temp[!is.na(temp)]
     temp = suppressWarnings(do.call(paste0("as.", atrybuty$klasyZm$w),
                                     list(x = temp)))
     if (!any(is.na(temp))) {
+      if (is.factor(x[[atrybuty$nazwyZm$w]])) {
+        x[[atrybuty$nazwyZm$w]] =
+          levels(x[[atrybuty$nazwyZm$w]])[x[[atrybuty$nazwyZm$w]]]
+      }
       x[[atrybuty$nazwyZm$w]] = do.call(paste0("as.", atrybuty$klasyZm$w),
                                         list(x = x[[atrybuty$nazwyZm$w]]))
     }
@@ -356,7 +369,11 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
                                      unique(x[[atrybuty$nazwyZm$w]]))
     x[[atrybuty$nazwyZm$w]] = addNA(x[[atrybuty$nazwyZm$w]])
   }
-  if (atrybuty$klasyZm$k %in% c("integer", "numeric")) {
+  if (atrybuty$klasyZm$k %in% c("integer", "numeric") &
+      ((atrybuty$sumowanie %in% "ogółem" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
+       (atrybuty$sumowanie %in% "kolumny" & (is.na(atrybuty$etykietaOgolem) | usunOgolem)) |
+       (atrybuty$sumowanie %in% "wiersze" & (is.na(atrybuty$etykietaSuma) | usunSuma)))) {
+    # wiadomo, że zmienna prezentowana w kolumnach nie jest czynnikiem
     temp = unique(x[[atrybuty$nazwyZm$k]])
     temp = temp[!is.na(temp)]
     temp = suppressWarnings(do.call(paste0("as.", atrybuty$klasyZm$k),
@@ -388,14 +405,27 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
 #' \code{as.data.frame}
 #' @param optional wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as.data.frame}
+#' @param niePrzeksztalcaj wartość logiczna - czy funkcja ma tylko usunąć
+#' z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
+#' \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
+#' \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)v
 #' @method as.data.frame tab_lbl2
 #' @importFrom tidyr as_tibble
 #' @export
 as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
-                                  ..., usunSuma = FALSE, wartoscBD = NULL,
-                                  niePrzeksztalcaj = FALSE) {
-  return(as.data.frame(as_tibble(x, usunSuma = usunSuma, wartoscBD = wartoscBD,
-                                 niePrzeksztalcaj = niePrzeksztalcaj)))
+                                  ..., usunSuma = FALSE, usunOgolem = FALSE,
+                                  wartoscBD = NULL, niePrzeksztalcaj = FALSE) {
+  stopifnot(is.logical(niePrzeksztalcaj), length(niePrzeksztalcaj) == 1)
+  stopifnot(niePrzeksztalcaj %in% c(TRUE, FALSE))
+  if (niePrzeksztalcaj) {
+    class(x) = "data.frame"
+    return(x)
+  } else {
+    return(as.data.frame(as_tibble(x, usunSuma = usunSuma,
+                                   usunOgolem = usunOgolem,
+                                   wartoscBD = wartoscBD,
+                                   niePrzeksztalcaj = niePrzeksztalcaj)))
+  }
 }
 #' @export
 `[.tab_lbl2` = function(x, i, j, drop = TRUE) {
@@ -516,6 +546,7 @@ sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
   attributes(x)$label = labels
   attributes(x)$sumowanie = sumowanie
   attributes(x)$etykietaSuma = etykietaSuma
+  attributes(x)$etykietaOgolem = etykietaOgolem
   attributes(x)$etykietaBD = etykietaBD
   return(x)
 }

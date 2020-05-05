@@ -87,6 +87,11 @@ tab2(mtcars, carb, cyl, "k", etykietaBD = "brak danych")
 tab2(mtcars, carb, cyl, "k", w = hp)
 
 as.data.frame(tab2(mtcars, cyl, carb, "k"))
+# aby uzyskać obiekt nadający się do wykorzystania
+# jako źródło danych do wykresu tworzonego przy pomocy pakietu ggplot2:
+as.data.frame(tab2(mtcars, cyl, carb, "k"), usunSuma = TRUE)
+# lub
+as.data.frame(tab2(mtcars, cyl, carb, "k"), usunSuma = TRUE, usunOgolem = TRUE)
 ```
 
 ### Funkcje wspomagające pracę ze zmiennymi etykietowanymi wczytanych przy pomocy pakietu *haven*
