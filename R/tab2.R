@@ -22,13 +22,19 @@
 #' liczebności?
 #' @param procenty wartość logiczna - czy zwracana tabela ma zawierać rozkłady
 #' częstości?
-#' @param etykietaSuma ciąg znaków - etykieta, którą w przygotowanym zestawieniu
+#' @param etykietaSuma ciąg znaków - etykieta dla wiersza lub kolumy z sumą
+#' (argument jest ignorowany, jeśli \code{sumowanie} równe \code{"brak"} lub
+#' \code{NULL})
+#' @param etykietaOgolem ciąg znaków - etykieta dla wiersza lub kolumny
+#' z rozkladem brzegowym zmiennej, której rodzina rozkładów warunkowowych jest
+#' tworzona (argument jest ignorowany, jeśli \code{sumowanie} równe
+#' \code{"brak"}, \code{"ogółem"} lub \code{NULL}); podanie wartości \code{NA}
+#' lub \code{NULL} oznacza, że odpowiedni wiersz/kolumna nie powinna znaleźć
+#' się w zwróconym zestawieniu
+#' @param etykietaBD ciąg znaków - etykieta, którą w przygotowanym zestawieniu
 #' mają być opisane braki danych \code{NA}; domyślna wartość oznacza, że zostaną
 #' one opisane jako "NA"; podanie \code{NULL} będzie skutkować usunięciem kolumn
 #' i wierszy opisujących braki danych ze zwracanego zestawienia
-#' @param etykietaBD ciąg znaków - etykieta dla wiersza lub kolumy z sumą
-#' (argument jest ignorowany, jeśli \code{sumowanie} równe \code{"brak"} lub
-#' \code{NULL})
 #' @param w opcjonalnie kolumna obiektu \code{x}, której wartości zawierają
 #' wagi obserwacji, które powinny zostać uwzględnione przy obliczaniu rozkładu
 #' @return
@@ -67,7 +73,7 @@
 #' @name tab2
 #' @export
 tab2 = function(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma,
-                etykietaBD, ...) {
+                etykietaOgolem, etykietaBD, ...) {
   UseMethod("tab2")
 }
 #' @rdname tab2
@@ -78,7 +84,8 @@ tab2 = function(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma,
 tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
                                                       "wiersze", "ogółem"),
                            liczby = TRUE, procenty = TRUE,
-                           etykietaSuma = "ŁĄCZNIE", etykietaBD = NA, ...,
+                           etykietaSuma = "SUMA", etykietaOgolem = "OGÓŁEM",
+                           etykietaBD = NA, ...,
                            w = NULL) {
   zmW = ensym(zmW)
   zmK = ensym(zmK)
@@ -95,12 +102,21 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
             is.character(etykietaSuma), length(etykietaSuma) == 1)
   stopifnot(liczby %in% c(TRUE, FALSE),
             procenty %in% c(TRUE, FALSE))
+  if (!is.null(etykietaOgolem)) {
+    stopifnot(length(etykietaOgolem) == 1)
+    if (is.na(etykietaOgolem)) {
+      etykietaOgolem = NA_character_
+    }
+    stopifnot(is.character(etykietaOgolem))
+  } else {
+    etykietaOgolem = NA_character_
+  }
   if (!is.null(etykietaBD)) {
     stopifnot(length(etykietaBD) == 1)
     if (is.na(etykietaBD)) {
       etykietaBD = NA_character_
     }
-    stopifnot(is.character(etykietaSuma))
+    stopifnot(is.character(etykietaBD))
   } else {
     x = x[!is.na(x[[as_name(zmW)]]) & !is.na(x[[as_name(zmK)]]), ]
     etykietaBD = NA_character_
@@ -129,7 +145,8 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
   x = count(x, !!zmW, !!zmK, wt = !!w, .drop = FALSE)
 
   x = sformatuj_rozklad2(x, zmW, zmK, sumowanie, liczby, procenty,
-                         etykietaSuma, etykietaBD, klasyZm, labels)
+                         etykietaSuma, etykietaOgolem, etykietaBD, klasyZm,
+                         labels)
   return(x)
 }
 #' @rdname tab2
@@ -138,7 +155,8 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
 tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
                                                    "wiersze", "ogółem"),
                         liczby = TRUE, procenty = TRUE,
-                        etykietaSuma = "ŁĄCZNIE", etykietaBD = NA, ...) {
+                        etykietaSuma = "SUMA", etykietaOgolem = "OGÓŁEM",
+                        etykietaBD = NA, ...) {
   zmW = ensym(zmW)
   zmK = ensym(zmK)
   sumowanie = match.arg(sumowanie)
@@ -149,12 +167,21 @@ tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
             is.character(etykietaSuma), length(etykietaSuma) == 1)
   stopifnot(liczby %in% c(TRUE, FALSE),
             procenty %in% c(TRUE, FALSE))
+  if (!is.null(etykietaOgolem)) {
+    stopifnot(length(etykietaOgolem) == 1)
+    if (is.na(etykietaOgolem)) {
+      etykietaOgolem = NA_character_
+    }
+    stopifnot(is.character(etykietaOgolem))
+  } else {
+    etykietaOgolem = NA_character_
+  }
   if (!is.null(etykietaBD)) {
     stopifnot(length(etykietaBD) == 1)
     if (is.na(etykietaBD)) {
       etykietaBD = NA_character_
     }
-    stopifnot(is.character(etykietaSuma))
+    stopifnot(is.character(etykietaBD))
   } else {
     x = filter(x, !is.na(!!zmW) & !is.na(!!zmK))
     etykietaBD = NA_character_
@@ -183,7 +210,8 @@ tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
     survey_count(x, !!zmW, !!zmK, vartype = NULL, .drop = FALSE))
 
   x = sformatuj_rozklad2(x, zmW, zmK, sumowanie, liczby, procenty,
-                         etykietaSuma, etykietaBD, klasyZm, labels)
+                         etykietaSuma, etykietaOgolem, etykietaBD, klasyZm,
+                         labels)
   return(x)
 }
 #' @rdname tab2
@@ -258,7 +286,6 @@ labels.tab_lbl2 = function(object, ...) {
 #' metody \code{as_tibble}
 #' @param rownames wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as_tibble}
-#' @method as.data.frame tab_lbl2
 #' @importFrom tidyr pivot_longer
 #' @export
 as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
@@ -399,7 +426,8 @@ as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
 #' @importFrom dplyr .data bind_cols bind_rows group_by mutate select
 #' starts_with summarise summarise_if ungroup
 sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
-                              etykietaSuma, etykietaBD, klasyZm, labels) {
+                              etykietaSuma, etykietaOgolem, etykietaBD, klasyZm,
+                              labels) {
   # obsługa etykiet braków danych
   if (!is.na(etykietaBD)) {
     if (is.factor(x[[as_name(zmW)]]) & any(x[[as_name(zmW)]] %in% NA)) {
@@ -423,9 +451,23 @@ sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
   if (sumowanie %in% c("kolumny", "wiersze")) {
     if (sumowanie == "kolumny") {
       zmGr = zmK
+      zmZal = zmW
     } else {
       zmGr = zmW
+      zmZal = zmK
     }
+  }
+  if (sumowanie %in% c("wiersze", "kolumny") & !is.na(etykietaOgolem)) {
+    temp = group_by(x, !!zmZal)
+    temp = summarise(temp, n = sum(.data$n))
+    temp = mutate(temp, !!zmGr := factor(etykietaOgolem,
+                                         c(levels(x[[as_name(zmGr)]]),
+                                           etykietaOgolem)))
+    x[[as_name(zmGr)]] = factor(x[[as_name(zmGr)]],
+                                levels(temp[[as_name(zmGr)]]))
+    x = bind_rows(ungroup(x), temp)
+  }
+  if (sumowanie %in% c("kolumny", "wiersze")) {
     x = group_by(x, !!zmGr)
   }
   x = mutate(x, pct = 100 * .data$n / sum(.data$n))
@@ -459,7 +501,8 @@ sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
   }
   # ew. rekonwersja pierwszej kolumny
   if (klasyZm$w %in% c("character", "integer", "numeric", "logical") &
-      is.na(etykietaBD) & sumowanie %in% c("brak", "wiersze")) {
+      is.na(etykietaBD) & is.na(etykietaOgolem) &
+      sumowanie %in% c("brak", "wiersze")) {
     x[[as_name(zmW)]] = do.call(paste0("as.", klasyZm$w),
                                 list(x = x[[as_name(zmW)]]))
   } else {

@@ -9,7 +9,18 @@
 \alias{as.data.frame.tab_lbl2}
 \title{Tabela z rodzina rozkladow warunkowych dwoch zmiennych (etykietowanych)}
 \usage{
-tab2(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma, etykietaBD, ...)
+tab2(
+  x,
+  zmW,
+  zmK,
+  sumowanie,
+  liczby,
+  procenty,
+  etykietaSuma,
+  etykietaOgolem,
+  etykietaBD,
+  ...
+)
 
 \method{tab2}{data.frame}(
   x,
@@ -18,7 +29,8 @@ tab2(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma, etykietaBD, ...)
   sumowanie = c("brak", "kolumny", "wiersze", "ogółem"),
   liczby = TRUE,
   procenty = TRUE,
-  etykietaSuma = "ŁĄCZNIE",
+  etykietaSuma = "SUMA",
+  etykietaOgolem = "OGÓŁEM",
   etykietaBD = NA,
   ...,
   w = NULL
@@ -31,14 +43,15 @@ tab2(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma, etykietaBD, ...)
   sumowanie = c("brak", "kolumny", "wiersze", "ogółem"),
   liczby = TRUE,
   procenty = TRUE,
-  etykietaSuma = "ŁĄCZNIE",
+  etykietaSuma = "SUMA",
+  etykietaOgolem = "OGÓŁEM",
   etykietaBD = NA,
   ...
 )
 
 \method{print}{tab_lbl2}(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",", ...)
 
-\method{as.data.frame}{tab_lbl2}(
+\method{as_tibble}{tab_lbl2}(
   x,
   ...,
   .rows = NULL,
@@ -77,14 +90,21 @@ liczebności?}
 \item{procenty}{wartość logiczna - czy zwracana tabela ma zawierać rozkłady
 częstości?}
 
-\item{etykietaSuma}{ciąg znaków - etykieta, którą w przygotowanym zestawieniu
+\item{etykietaSuma}{ciąg znaków - etykieta dla wiersza lub kolumy z sumą
+(argument jest ignorowany, jeśli \code{sumowanie} równe \code{"brak"} lub
+\code{NULL})}
+
+\item{etykietaOgolem}{ciąg znaków - etykieta dla wiersza lub kolumny
+z rozkladem brzegowym zmiennej, której rodzina rozkładów warunkowowych jest
+tworzona (argument jest ignorowany, jeśli \code{sumowanie} równe
+\code{"brak"}, \code{"ogółem"} lub \code{NULL}); podanie wartości \code{NA}
+lub \code{NULL} oznacza, że odpowiedni wiersz/kolumna nie powinna znaleźć
+się w zwróconym zestawieniu}
+
+\item{etykietaBD}{ciąg znaków - etykieta, którą w przygotowanym zestawieniu
 mają być opisane braki danych \code{NA}; domyślna wartość oznacza, że zostaną
 one opisane jako "NA"; podanie \code{NULL} będzie skutkować usunięciem kolumn
 i wierszy opisujących braki danych ze zwracanego zestawienia}
-
-\item{etykietaBD}{ciąg znaków - etykieta dla wiersza lub kolumy z sumą
-(argument jest ignorowany, jeśli \code{sumowanie} równe \code{"brak"} lub
-\code{NULL})}
 
 \item{...}{w przypadku metody \code{print}: ew. inne parametry, przekazywane
 do \code{\link[base]{format}} (wywołwanej na komórkach opisujących

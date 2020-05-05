@@ -1,7 +1,21 @@
 --------------------
+daneIBE 0.6.3 (5.05.2020)
+
+Udoskonalenia:
+
+- tab2() w trybie tworzenia rodziny rozkładów warunkowych (sumowanie równe
+  "kolumny" lub "wiersze") zwraca również kolumnę/wiersz z rozkładame brzegowym
+  zmiennej zależnej - etykietę kolumny/wiersza można podać argumentem
+  `etykietaOgolem`, albo ustawić jego wartość na NA lub NULL, aby wskazać, że
+  zwrócony rozkład ma nie zawierać takiej kolumny/takiego wiersza
+  - aby zmniejszyć ryzyko nieporozumień domyślną etykietę kolumny/wiersza sumy
+    zmieniono z "ŁĄCZNIE" na "SUMA".
+
+--------------------
 daneIBE 0.6.2 (5.05.2020)
 
 Naprawione błędy:
+
 - tab() nie radzi sobie ze zmiennymi tekstowymi ani liczbowymi w ramach obiektów
   tbl_svy, jeśli zawierają braki danych (przyczyna problemu to nieradzenie
   sobie w takiej sytuacji przez funkcję survey_count() z pakietu srvyr - aby
