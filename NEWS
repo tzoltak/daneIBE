@@ -1,4 +1,13 @@
 --------------------
+daneIBE 0.6.2 (5.05.2020)
+
+Naprawione błędy:
+- tab() nie radzi sobie ze zmiennymi tekstowymi ani liczbowymi w ramach obiektów
+  tbl_svy, jeśli zawierają braki danych (przyczyna problemu to nieradzenie
+  sobie w takiej sytuacji przez funkcję survey_count() z pakietu srvyr - aby
+  to obejść, tab() wewnętrznie konwertuje takie zmienne na czynniki).
+
+--------------------
 daneIBE 0.6.1 (28.04.2020)
 
 Udoskonalenia:

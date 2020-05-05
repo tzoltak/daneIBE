@@ -51,13 +51,17 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
             suma %in% c(TRUE, FALSE))
 
   # workaround na to, że survey_count() nie radzi sobie ze zm. numerycznymi
+  # ani tekstowymi (jeśli zawierają braki danych)
   label = label(x$variables[[as.name(zmienna)]])
   valueLabels = value_labels(x$variables[[as.name(zmienna)]])
   if (is.numeric(x$variables[[as.name(zmienna)]]) |
       is.logical(x$variables[[as.name(zmienna)]])) {
     konwersja = mode(x$variables[[as.name(zmienna)]])
-    x$variables[[as.name(zmienna)]] =
-      as.character(x$variables[[as.name(zmienna)]])
+    x$variables[[as.name(zmienna)]] = factor(x$variables[[as.name(zmienna)]])
+  } else if (is.character(x$variables[[as.name(zmienna)]])) {
+    konwersja = "character"
+    x$variables[[as.name(zmienna)]] = factor(x$variables[[as.name(zmienna)]])
+    x$variables[[as.name(zmienna)]] = addNA(x$variables[[as.name(zmienna)]])
   } else {
     konwersja = NA_character_
   }
