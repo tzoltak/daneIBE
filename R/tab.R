@@ -13,30 +13,35 @@
 #' @param suma wartość logiczna - czy wyświetlić wiersz z sumą?
 #' @param etykietaSuma ciąg znaków - etykieta dla wiersza z sumą (argument jest
 #' ignorowany, jeśli \code{suma} równe \code{FALSE})
+#' @param etykietaBD ciąg znaków - etykieta, którą w przygotowanym zestawieniu
+#' mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
+#' zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
+#' usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
+#' zestawienia
 #' @return \code{data.frame} (klasy \code{tab_lbl}) z rozkładami
 #' @name tab
 #' @export
 tab = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
-               etykietaSuma = "ŁĄCZNIE") {
+               etykietaSuma, etykietaBD) {
   UseMethod("tab")
 }
 #' @rdname tab
 #' @importFrom rlang ensyms
 #' @export
 tab.data.frame = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
-                          etykietaSuma = "ŁĄCZNIE") {
+                          etykietaSuma = "ŁĄCZNIE", etykietaBD = NA) {
   zmienna = ensyms(...)
   if (length(zmienna) == 0) stop("Nie podano zmiennej.")
   if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
   if (!(!!zmienna %in% names(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
-  tab.default(x[[zmienna[[1]]]], procenty, d, suma, etykietaSuma)
+  tab.default(x[[zmienna[[1]]]], procenty, d, suma, etykietaSuma, etykietaBD)
 }
 #' @rdname tab
 #' @importFrom rlang as_name
 #' @importFrom srvyr survey_count
 #' @export
 tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
-                       etykietaSuma = "ŁĄCZNIE") {
+                       etykietaSuma = "ŁĄCZNIE", etykietaBD = NA) {
   zmienna = ensyms(...)
   if (length(zmienna) == 0) stop("Nie podano zmiennej.")
   if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
@@ -75,6 +80,9 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
     tab$x = do.call(paste0("as.", konwersja), list(x = tab$x))
   }
   # koniec workaroundu
+  if (is.null(etykietaBD)) {
+    tab = tab[!is.na(tab$x), ]
+  }
   r = sum(round(tab$Freq, 0)) - round(sum(tab$Freq), 0)
   if (r > 0) {
     maska = order(((tab$Freq + 0.5) %% 1))[1:r]
@@ -85,7 +93,7 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
   }
   tab$Freq = round(tab$Freq, 0)
   tab = sformatuj_rozklad(tab, label, valueLabels, procenty, d, suma,
-                          etykietaSuma)
+                          etykietaSuma, etykietaBD)
   return(tab)
 }
 #' @rdname tab
@@ -93,7 +101,7 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
 #' @importFrom haven is.labelled
 #' @export
 tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
-                       etykietaSuma = "ŁĄCZNIE") {
+                       etykietaSuma = "ŁĄCZNIE", etykietaBD = NA) {
   stopifnot(is.numeric(x) | is.integer(x) | is.character(x) | is.labelled(x) | is.factor(x),
             is.logical(procenty), length(procenty) == 1,
             is.numeric(d), length(d) == 1,
@@ -103,10 +111,15 @@ tab.default = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
             as.integer(d) == d,
             suma %in% c(TRUE, FALSE))
 
-  tab = table(x, exclude = NULL)
+  if (is.null(etykietaBD)) {
+    exclude = NA
+  } else {
+    exclude = NULL
+  }
+  tab = table(x, exclude = exclude)
   tab = as.data.frame(tab, stringsAsFactors = FALSE)
   tab = sformatuj_rozklad(tab, label(x), value_labels(x),
-                          procenty, d, suma, etykietaSuma)
+                          procenty, d, suma, etykietaSuma, etykietaBD)
   return(tab)
 }
 #' @rdname tab
@@ -121,7 +134,7 @@ print.tab_lbl = function(x, ...) {
 # wszystkim, czego trzeba
 sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
                              procenty = TRUE, d = 1, suma = TRUE,
-                             etykietaSuma = "ŁĄCZNIE") {
+                             etykietaSuma = "ŁĄCZNIE", etykietaBD = NA) {
   if (suma) {
     sum = data.frame(x = "", Freq = sum(tab$Freq))
   }
@@ -145,7 +158,13 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
     tab$Freq[is.na(tab$Freq)] = 0
     tab$pr[is.na(tab$pr)] = paste0(format(0, nsmall = d), "%")
     tab = tab[order(tab$x), ]
-    tab$etykieta[is.na(tab$etykieta)] = ""
+    if (!is.null(etykietaBD)) {
+      if (!is.na(etykietaBD)) {
+        tab$etykieta[is.na(tab$etykieta)] = etykietaBD
+      } else {
+        tab$etykieta[is.na(tab$etykieta)] = "NA"
+      }
+    }
     # obejście ew. problemów z kodowaniem etykiet
     if (any(is.na(nchar(tab$etykieta, "chars", TRUE)))) {
       Encoding(tab$etykieta) = sub("^[^.]*[.]", "", Sys.getlocale("LC_COLLATE"))

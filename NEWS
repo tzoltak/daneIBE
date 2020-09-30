@@ -1,7 +1,34 @@
---------------------
-daneIBE 0.6.3 (5.05.2020)
+# Do zrobienia
 
-Udoskonalenia:
+- tab() sortuje wartości jako ciągi znaków, a nie jako liczby (czasami);
+- uspójnienie API tab() z tab2() - obsługa braków danych;
+- funkcja do przygotowywania tabel z zestawieniami rozkładów wielu zmiennych
+  o tym samym zestawie wartości;
+- funkcja do przygotowywania tabel z rozkładami wielokrotnych odpowiedzi;
+
+--------------------------------------------------------------------------------
+
+# daneIBE 0.6.4 (30.09.2020)
+
+## Udoskonalenia:
+
+- tab() otrzymała dodatkowy argument `etykietaBD`, działający analogicznie, jak
+  ten sam argument w tab2() (w szczególności pozwala usunąć braki danych ze
+  zwracanego rozkładu).
+
+## Naprawione błędy:
+
+- tab() najpierw konwertuje zmienne etykietowane na czynniki, a dopiero potem
+  zbiera informacje o klasach zmiennych ("przywracanie formatów" i tak nie jest
+  zaimplementowane dla zmiennych etykietowanych);
+- trochę poprawek w dokumentacji tab();
+- trochę poprawek w obsłudze metod.
+
+--------------------------------------------------------------------------------
+
+# daneIBE 0.6.3 (5.05.2020)
+
+## Udoskonalenia:
 
 - tab2() w trybie tworzenia rodziny rozkładów warunkowych (sumowanie równe
   "kolumny" lub "wiersze") zwraca również kolumnę/wiersz z rozkładame brzegowym
@@ -14,26 +41,28 @@ Udoskonalenia:
     który pozwala pozbyć się wierszy opisujących rozkład brzegowy zmiennej
     zależnej ze zwracanej ramki danych.
 
-Naprawione błędy:
+## Naprawione błędy:
 
 - as_tibble() (i as.data.frame()) wywołane na obiekcie zwróconym przez tab2()
   poprawnie radzą sobie z przywracaniem formatu zmiennej opisywanej w wierszach
   tabeli (jeśli takie przywrócenie formatu jest możliwe).
 
---------------------
-daneIBE 0.6.2 (5.05.2020)
+--------------------------------------------------------------------------------
 
-Naprawione błędy:
+# daneIBE 0.6.2 (5.05.2020)
+
+## Naprawione błędy:
 
 - tab() nie radzi sobie ze zmiennymi tekstowymi ani liczbowymi w ramach obiektów
   tbl_svy, jeśli zawierają braki danych (przyczyna problemu to nieradzenie
   sobie w takiej sytuacji przez funkcję survey_count() z pakietu srvyr - aby
   to obejść, tab() wewnętrznie konwertuje takie zmienne na czynniki).
 
---------------------
-daneIBE 0.6.1 (28.04.2020)
+--------------------------------------------------------------------------------
 
-Udoskonalenia:
+# daneIBE 0.6.1 (28.04.2020)
+
+## Udoskonalenia:
 
 - obiekty zwracane przez tab2() otrzymały metodę as_tibble(), które zwraca
   tibble, w odróżnieniu od metody as.data.frame(), która zwraca "base'ową"
@@ -41,14 +70,16 @@ Udoskonalenia:
   as.data.frame() na wynikach wywołania as.data.frame(), żeby uzyskać "base'ową"
   ramkę danych.
 
-Naprawione błędy:
+## Naprawione błędy:
+
 - tab() nie radzi sobie z przywróceniem typu, jaki miały wartości liczbowe
   zmiennej klasy haven_labelled.
 
---------------------
-daneIBE 0.6.0 (19.04.2020)
+--------------------------------------------------------------------------------
 
-Nowe funkcje:
+# daneIBE 0.6.0 (19.04.2020)
+
+## Nowe funkcje:
 
 - tab2() pozwala tworzyć łączne rozkłady liczebności i łączne rozkłady częstości
   lub rodziny warunkowych rozkładów częstości dwóch zmiennych:
@@ -61,14 +92,15 @@ Nowe funkcje:
   w ggplot2;
 - funkcja label()<- pozwalająca przypisać wartość atrybutowi "label" obiektu.
 
-Udoskonalenia:
+## Udoskonalenia:
 
 - Uzupełniona dokumentacja i plik README.md.
 
---------------------
-daneIBE 0.5.0 (9.04.2020)
+--------------------------------------------------------------------------------
 
-Nowe funkcje:
+# daneIBE 0.5.0 (9.04.2020)
+
+## Nowe funkcje:
 
 - metoda tab() dla ramek danych (drugi argument wskazuje kolumnę, której rozkład
   ma zostać wygenerowany - obsługuje "tidy evaluation"),
@@ -77,70 +109,77 @@ Nowe funkcje:
 - label() - zwraca etykietę przypisaną do wektora (do zastosowania w odniesieniu
   do obiektu, który był kolumną ramki danych, ale został już z niej "wybrany").
 
-Udoskonalenia:
+## Udoskonalenia:
 
 - tab() nie drukuje tabeli na konsoli, lecz odpowiada za to metoda print()
   zwracanego przez nią obiektu.
 
---------------------
-daneIBE 0.4.0 (11.12.2019)
+--------------------------------------------------------------------------------
 
-Aktualizacje:
+# daneIBE 0.4.0 (11.12.2019)
+
+## Aktualizacje:
 
 - funkcje i metody działające na etykietach współpracują z pakietem haven
   w wersjach >= 2.0.0 (tj. odwołują się do klasy "haven_labelled").
 
-Udoskonalenia:
+## Udoskonalenia:
 
 - metoda print() dla listy etykiet wartości zmiennych.
 
---------------------
-daneIBE 0.3.1 (4.09.2018)
+--------------------------------------------------------------------------------
 
-Poprawione błędy:
+# daneIBE 0.3.1 (4.09.2018)
+
+## Poprawione błędy:
 
 - zastosuj_codebook() radzi sobie z kolumnami w wejściowym zbiorze, które
   wczytują się jako innego typu niż numeric lub character.
 
---------------------
-daneIBE 0.3.0 (6.12.2017)
+--------------------------------------------------------------------------------
 
-Nowe funkcje:
+# daneIBE 0.3.0 (6.12.2017)
+
+## Nowe funkcje:
 
 - metody funkcji labels() dla ramek danych, list i obiektów klasy labelled
   i funkcja value_labels(), a także powiązane z wynikami ich działania metody
   funkcji print() pozwalają na wygodny dostęp do etykiet zmiennych i etykiet
   wartości.
 
---------------------
-daneIBE 0.2.0 (5.12.2017)
+--------------------------------------------------------------------------------
 
-Nowe funkcje:
+# daneIBE 0.2.0 (5.12.2017)
+
+## Nowe funkcje:
 
 - tab() generuje rozkład(y) liczebności i częstości jednej zmiennej w ramach
   tej samej tabeli, w miarę możliwości wykorzystując też etykiety wartości.
 
---------------------
-daneIBE 0.1.2 (22.11.2017)
+--------------------------------------------------------------------------------
 
-Udoskonalenia:
+# daneIBE 0.1.2 (22.11.2017)
+
+## Udoskonalenia:
 
 - zastosuj_codebook() nieco bardziej wyrozumiała wobec nazw kolumn w pliku
   z codebookiem.
 
---------------------
-daneIBE 0.1.1 (30.10.2017)
+--------------------------------------------------------------------------------
 
-Naprawione błędy:
+# daneIBE 0.1.1 (30.10.2017)
+
+## Naprawione błędy:
 
 - zastosuj_codebook() używa wartości kolumny 'opis' z codebooka, gdy kolumna
   'krotki opis' jest pusta;
 - labelled_na_foreigndata() zachowuje etykiety wartości dla wszystkich zmiennych.
 
---------------------
-Publikacja daneIBE 0.1.0 (07.10.2017)
+--------------------------------------------------------------------------------
 
-Nowe funkcje:
+# Publikacja daneIBE 0.1.0 (07.10.2017)
+
+## Nowe funkcje:
 
 - zastosuj_codebook();
 - labelled_na_foreigndta().

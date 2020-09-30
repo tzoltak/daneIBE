@@ -8,13 +8,37 @@
 \alias{print.tab_lbl}
 \title{Tabela z rozkladem dla zmiennych etykietowanych}
 \usage{
-tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+tab(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma, etykietaBD)
 
-\method{tab}{data.frame}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+\method{tab}{data.frame}(
+  x,
+  ...,
+  procenty = TRUE,
+  d = 1,
+  suma = TRUE,
+  etykietaSuma = "ŁĄCZNIE",
+  etykietaBD = NA
+)
 
-\method{tab}{tbl_svy}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+\method{tab}{tbl_svy}(
+  x,
+  ...,
+  procenty = TRUE,
+  d = 1,
+  suma = TRUE,
+  etykietaSuma = "ŁĄCZNIE",
+  etykietaBD = NA
+)
 
-\method{tab}{default}(x, ..., procenty = TRUE, d = 1, suma = TRUE, etykietaSuma = "ŁĄCZNIE")
+\method{tab}{default}(
+  x,
+  ...,
+  procenty = TRUE,
+  d = 1,
+  suma = TRUE,
+  etykietaSuma = "ŁĄCZNIE",
+  etykietaBD = NA
+)
 
 \method{print}{tab_lbl}(x, ...)
 }
@@ -35,6 +59,12 @@ będą procenty (argument jest ignowowany, jeśli \code{procenty} równe
 
 \item{etykietaSuma}{ciąg znaków - etykieta dla wiersza z sumą (argument jest
 ignorowany, jeśli \code{suma} równe \code{FALSE})}
+
+\item{etykietaBD}{ciąg znaków - etykieta, którą w przygotowanym zestawieniu
+mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
+zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
+usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
+zestawienia}
 }
 \value{
 \code{data.frame} (klasy \code{tab_lbl}) z rozkładami

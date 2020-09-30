@@ -2,15 +2,16 @@
 #' @description
 #' Funkcja generuje rozkład łączny liczebności i rozkład łączny lub rodzinę
 #' warunkowych rozkładów częstości dwóch zmiennych. Jako pierwszy argument
-#' przyjmuje obiekty \code{data.frame} lub \code{tbl_svy} (obiekcie będącym
-#' połączeniem \emph{ramki danych} z informacjami o złożonym schemacie doboru
-#' próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi też sobie ze
-#' zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
+#' przyjmuje obiekt \code{data.frame} lub \code{tbl_svy} (obiekt będący
+#' połączeniem \emph{ramki danych} z informacjami o - zwykle złożonym -
+#' schemacie doboru próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi
+#' też sobie ze zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
+#'
 #' Metoda \code{as.data.frame} pozwala przekształcić zwracane zestawienie
-#' w ramkę danych (ściśle w \emph{tibble}) w postaci \emph{długiej}, przydatną
-#' np. do rysowania wykresów przy pomocy \emph{ggplot2} (czyli działa
-#' analogicznie,jak metoda \code{as.data.frame} dla obiektów zwracanych przez
-#' funkcję \code{\link[base]{table}} z pakietu \emph{base}).
+#' w ramkę danych w postaci \emph{długiej}, przydatną np. do rysowania wykresów
+#' przy pomocy \emph{ggplot2} (czyli działa analogicznie,jak metoda
+#' \code{as.data.frame} dla obiektów zwracanych przez funkcję
+#' \code{\link[base]{table}} z pakietu \emph{base}).
 #' @param x ramka danych lub obiekt klasy \code{tbl_svy}
 #' @param zmW kolumna obiektu \code{x}, której wartości mają zostać umieszczone
 #' w wierszach zwróconego rozkładu
@@ -32,9 +33,10 @@
 #' lub \code{NULL} oznacza, że odpowiedni wiersz/kolumna nie powinna znaleźć
 #' się w zwróconym zestawieniu
 #' @param etykietaBD ciąg znaków - etykieta, którą w przygotowanym zestawieniu
-#' mają być opisane braki danych \code{NA}; domyślna wartość oznacza, że zostaną
-#' one opisane jako "NA"; podanie \code{NULL} będzie skutkować usunięciem kolumn
-#' i wierszy opisujących braki danych ze zwracanego zestawienia
+#' mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
+#' zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
+#' usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
+#' zestawienia
 #' @param w opcjonalnie kolumna obiektu \code{x}, której wartości zawierają
 #' wagi obserwacji, które powinny zostać uwzględnione przy obliczaniu rozkładu
 #' @return
@@ -121,10 +123,8 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
     x = x[!is.na(x[[as_name(zmW)]]) & !is.na(x[[as_name(zmK)]]), ]
     etykietaBD = NA_character_
   }
-  labels = list(w = label(x$variables[[as_name(zmW)]]),
-                k = label(x$variables[[as_name(zmK)]]))
-  klasyZm = list(w = class(x[[as_name(zmW)]]),
-                 k = class(x[[as_name(zmK)]]))
+  labels = list(w = label(x[[as_name(zmW)]]),
+                k = label(x[[as_name(zmK)]]))
 
   # obsługa zmiennych typu labelled
   if (is.labelled(x[[as_name(zmW)]])) {
@@ -133,6 +133,11 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
   if (is.labelled(x[[as_name(zmK)]])) {
     x[[as_name(zmK)]] = as_factor(x[[as_name(zmK)]])
   }
+
+  # zapisanie klas zmiennych, aby umożliwić ich późniejszą "rekonwersję" (z czynników)
+  klasyZm = list(w = class(x[[as_name(zmW)]])[length(class(x[[as_name(zmW)]]))],
+                 k = class(x[[as_name(zmK)]])[length(class(x[[as_name(zmK)]]))])
+
   # konwersja na czynniki
   x[[as_name(zmW)]] = factor(x[[as_name(zmW)]],
                              sort(unique(x[[as_name(zmW)]])))
@@ -188,8 +193,6 @@ tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
   }
   labels = list(w = label(x$variables[[as_name(zmW)]]),
                 k = label(x$variables[[as_name(zmK)]]))
-  klasyZm = list(w = class(x$variables[[as_name(zmW)]]),
-                 k = class(x$variables[[as_name(zmK)]]))
 
   # obsługa zmiennych typu labelled
   if (is.labelled(x$variables[[as_name(zmW)]])) {
@@ -198,6 +201,11 @@ tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
   if (is.labelled(x$variables[[as_name(zmK)]])) {
     x$variables[[as_name(zmK)]] = as_factor(x$variables[[as_name(zmK)]])
   }
+
+  # zapisanie klas zmiennych, aby umożliwić ich późniejszą "rekonwersję" (z czynników)
+  klasyZm = list(w = class(x$variables[[as_name(zmW)]]),
+                 k = class(x$variables[[as_name(zmK)]]))
+
   # konwersja na czynniki
   x$variables[[as_name(zmW)]] = factor(x$variables[[as_name(zmW)]],
                                        sort(unique(x$variables[[as_name(zmW)]])))
@@ -280,13 +288,15 @@ labels.tab_lbl2 = function(object, ...) {
 #' zmiennej prezentowanej w kolumnach
 #' @param .rows wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as_tibble}
-#' @param .name.repair wyłącznie dla zgodności ze wzorcem (\emph{generic})
-#' metody \code{as_tibble}
+#' @param .name_repair przekazywana jako argument \code{names_repair} do
+#' \code{\link[tidyr]{pivot_longer}}
 #' @param rownames wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as_tibble}
 #' @importFrom tidyr pivot_longer
 #' @export
-as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
+as_tibble.tab_lbl2 = function(x, ..., .rows = NULL,
+                              .name_repair = c("check_unique", "unique",
+                                               "universal", "minimal"),
                               rownames = NULL, usunSuma = FALSE,
                               usunOgolem = FALSE, wartoscBD = NULL) {
   stopifnot(is.logical(usunSuma), length(usunSuma) == 1,
@@ -306,8 +316,8 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
 
   x = pivot_longer(as.data.frame(unclass(x)),
                    -1, names_to = c("rozklad", attributes(x)$nazwyZm$k),
-                   names_pattern = "^(n_|pct_)(.*)$")
-  x$rozklad = sub("_$", "", x$rozklad)
+                   names_pattern = "^(n|pct)_(.*)$",
+                   names_repair = .name_repair)
   # ew. usuwanie wierszy sumy i rozkładu brzegowego zm. zal.
   if (usunSuma & !is.na(atrybuty$etykietaSuma)) {
     x = x[!(x[[atrybuty$nazwyZm$w]] %in% atrybuty$etykietaSuma), ]
@@ -343,7 +353,7 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
              x[[atrybuty$nazwyZm$k]])
   }
   # konwersja typów kolumn
-  if (atrybuty$klasyZm$w %in% c("integer", "numeric") &
+  if (any(atrybuty$klasyZm$w %in% c("integer", "numeric")) &
       ((atrybuty$sumowanie %in% "ogółem" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
        (atrybuty$sumowanie %in% "kolumny" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
        (atrybuty$sumowanie %in% "wiersze" & (is.na(atrybuty$etykietaOgolem) | usunOgolem)))) {
@@ -354,33 +364,37 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL, .name.repair = NULL,
       temp = unique(x[[atrybuty$nazwyZm$w]])
     }
     temp = temp[!is.na(temp)]
-    temp = suppressWarnings(do.call(paste0("as.", atrybuty$klasyZm$w),
-                                    list(x = temp)))
+    temp = suppressWarnings(
+      do.call(paste0("as.", atrybuty$klasyZm$w[length(atrybuty$klasyZm$w)]),
+              list(x = temp)))
     if (!any(is.na(temp))) {
       if (is.factor(x[[atrybuty$nazwyZm$w]])) {
         x[[atrybuty$nazwyZm$w]] =
           levels(x[[atrybuty$nazwyZm$w]])[x[[atrybuty$nazwyZm$w]]]
       }
-      x[[atrybuty$nazwyZm$w]] = do.call(paste0("as.", atrybuty$klasyZm$w),
-                                        list(x = x[[atrybuty$nazwyZm$w]]))
+      x[[atrybuty$nazwyZm$w]] =
+        do.call(paste0("as.", atrybuty$klasyZm$w[length(atrybuty$klasyZm$w)]),
+                list(x = x[[atrybuty$nazwyZm$w]]))
     }
   } else {
     x[[atrybuty$nazwyZm$w]] = factor(x[[atrybuty$nazwyZm$w]],
                                      unique(x[[atrybuty$nazwyZm$w]]))
     x[[atrybuty$nazwyZm$w]] = addNA(x[[atrybuty$nazwyZm$w]])
   }
-  if (atrybuty$klasyZm$k %in% c("integer", "numeric") &
+  if (any(atrybuty$klasyZm$k %in% c("integer", "numeric")) &
       ((atrybuty$sumowanie %in% "ogółem" & (is.na(atrybuty$etykietaSuma) | usunSuma)) |
        (atrybuty$sumowanie %in% "kolumny" & (is.na(atrybuty$etykietaOgolem) | usunOgolem)) |
        (atrybuty$sumowanie %in% "wiersze" & (is.na(atrybuty$etykietaSuma) | usunSuma)))) {
     # wiadomo, że zmienna prezentowana w kolumnach nie jest czynnikiem
     temp = unique(x[[atrybuty$nazwyZm$k]])
     temp = temp[!is.na(temp)]
-    temp = suppressWarnings(do.call(paste0("as.", atrybuty$klasyZm$k),
-                                    list(x = temp)))
+    temp = suppressWarnings(
+      do.call(paste0("as.", atrybuty$klasyZm$k[length(atrybuty$klasyZm$k)]),
+              list(x = temp)))
     if (!any(is.na(temp))) {
-      x[[atrybuty$nazwyZm$k]] = do.call(paste0("as.", atrybuty$klasyZm$k),
-                                        list(x = x[[atrybuty$nazwyZm$k]]))
+      x[[atrybuty$nazwyZm$k]] =
+        do.call(paste0("as.", atrybuty$klasyZm$k[length(atrybuty$klasyZm$k)]),
+                list(x = x[[atrybuty$nazwyZm$k]]))
     }
   } else {
     x[[atrybuty$nazwyZm$k]] = factor(x[[atrybuty$nazwyZm$k]],
@@ -530,11 +544,12 @@ sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
     x = select(x, -starts_with("pct_"))
   }
   # ew. rekonwersja pierwszej kolumny
-  if (klasyZm$w %in% c("character", "integer", "numeric", "logical") &
+  if (any(klasyZm$w %in% c("character", "integer", "numeric", "logical")) &
       is.na(etykietaBD) & is.na(etykietaOgolem) &
       sumowanie %in% c("brak", "wiersze")) {
-    x[[as_name(zmW)]] = do.call(paste0("as.", klasyZm$w),
-                                list(x = x[[as_name(zmW)]]))
+    x[[as_name(zmW)]] =
+      do.call(paste0("as.", klasyZm$w[length(klasyZm$w)]),
+              list(x = x[[as_name(zmW)]]))
   } else {
     x[[as_name(zmW)]] = factor(x[[as_name(zmW)]], x[[as_name(zmW)]])
   }

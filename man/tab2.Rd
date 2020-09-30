@@ -55,7 +55,7 @@ tab2(
   x,
   ...,
   .rows = NULL,
-  .name.repair = NULL,
+  .name_repair = c("check_unique", "unique", "universal", "minimal"),
   rownames = NULL,
   usunSuma = FALSE,
   usunOgolem = FALSE,
@@ -103,9 +103,10 @@ lub \code{NULL} oznacza, że odpowiedni wiersz/kolumna nie powinna znaleźć
 się w zwróconym zestawieniu}
 
 \item{etykietaBD}{ciąg znaków - etykieta, którą w przygotowanym zestawieniu
-mają być opisane braki danych \code{NA}; domyślna wartość oznacza, że zostaną
-one opisane jako "NA"; podanie \code{NULL} będzie skutkować usunięciem kolumn
-i wierszy opisujących braki danych ze zwracanego zestawienia}
+mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
+zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
+usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
+zestawienia}
 
 \item{...}{w przypadku metody \code{print}: ew. inne parametry, przekazywane
 do \code{\link[base]{format}} (wywołwanej na komórkach opisujących
@@ -127,8 +128,8 @@ jeśli przy tworzeniu rozkładu stosowano ważenie)}
 \item{.rows}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 \code{as_tibble}}
 
-\item{.name.repair}{wyłącznie dla zgodności ze wzorcem (\emph{generic})
-metody \code{as_tibble}}
+\item{.name_repair}{przekazywana jako argument \code{names_repair} do
+\code{\link[tidyr]{pivot_longer}}}
 
 \item{rownames}{wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 \code{as_tibble}}
@@ -195,13 +196,14 @@ W zależności od wartości parametru \code{niePrzeksztalcaj}:
 \description{
 Funkcja generuje rozkład łączny liczebności i rozkład łączny lub rodzinę
 warunkowych rozkładów częstości dwóch zmiennych. Jako pierwszy argument
-przyjmuje obiekty \code{data.frame} lub \code{tbl_svy} (obiekcie będącym
-połączeniem \emph{ramki danych} z informacjami o złożonym schemacie doboru
-próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi też sobie ze
-zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
+przyjmuje obiekt \code{data.frame} lub \code{tbl_svy} (obiekt będący
+połączeniem \emph{ramki danych} z informacjami o - zwykle złożonym -
+schemacie doboru próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi
+też sobie ze zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
+
 Metoda \code{as.data.frame} pozwala przekształcić zwracane zestawienie
-w ramkę danych (ściśle w \emph{tibble}) w postaci \emph{długiej}, przydatną
-np. do rysowania wykresów przy pomocy \emph{ggplot2} (czyli działa
-analogicznie,jak metoda \code{as.data.frame} dla obiektów zwracanych przez
-funkcję \code{\link[base]{table}} z pakietu \emph{base}).
+w ramkę danych w postaci \emph{długiej}, przydatną np. do rysowania wykresów
+przy pomocy \emph{ggplot2} (czyli działa analogicznie,jak metoda
+\code{as.data.frame} dla obiektów zwracanych przez funkcję
+\code{\link[base]{table}} z pakietu \emph{base}).
 }

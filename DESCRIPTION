@@ -1,6 +1,6 @@
 Package: daneIBE
 Title: Funkcje wspomagajace przetwarzanie danych sondazowych
-Version: 0.6.3
+Version: 0.6.4
 Authors@R: 
   person("Tomasz", "Żółtak", email = "tomek@zozlak.org", role = c("aut", "cre"))
 Description: Funkcje wspomagajęce przetwarzanie danych sondażowych.
@@ -21,4 +21,4 @@ Encoding: UTF-8
 LazyData: true
 Language: pl
 NeedsCompilation: no
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
