@@ -7,11 +7,16 @@
 #' schemacie doboru próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi
 #' też sobie ze zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
 #'
-#' Metoda \code{as.data.frame} pozwala przekształcić zwracane zestawienie
+#' Metoda \code{as_tibble} pozwala przekształcić zwracane zestawienie
 #' w ramkę danych w postaci \emph{długiej}, przydatną np. do rysowania wykresów
 #' przy pomocy \emph{ggplot2} (czyli działa analogicznie,jak metoda
 #' \code{as.data.frame} dla obiektów zwracanych przez funkcję
-#' \code{\link[base]{table}} z pakietu \emph{base}).
+#' \code{\link[base]{table}} z pakietu \emph{base}). Metoda \code{as.data.frame}
+#' również jest dostępna, ale domyślnie nie przekształca tabeli (usuwa jedynie
+#' klase \code{tab_n}), gdyż inaczej przygotowanych tabel z rozkładami nie
+#' dawałyby się bezproblemowo używać w połączeniu z funkcją
+#' \code{\link[knitr]{kable}} z pakietu \emph{kable} (która to funkcja wywołuje
+#' wywołuje metodę \code{as.data.frame} na przekazywanym jej obiekcie).
 #' @param x ramka danych lub obiekt klasy \code{tbl_svy}
 #' @param zmW kolumna obiektu \code{x}, której wartości mają zostać umieszczone
 #' w wierszach zwróconego rozkładu
@@ -65,7 +70,7 @@
 #' }
 #' W takim przypadku będzie mieć ona takiego typu, jaki kolumna miała w danych
 #' wejściowych.
-#' \strong{metoda as.data.frame}
+#' \strong{metoda as_tibble}
 #' W zależności od wartości parametru \code{niePrzeksztalcaj}:
 #' \itemize{
 #'   \item{\emph{tibble} z rozkładami przekształconymi do postaci \emph{długiej},}
@@ -155,6 +160,7 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
   return(x)
 }
 #' @rdname tab2
+#' @importFrom haven as_factor
 #' @importFrom srvyr filter survey_count
 #' @export
 tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
@@ -276,7 +282,7 @@ labels.tab_lbl2 = function(object, ...) {
 }
 #' @rdname tab2
 #' @param usunSuma wartość logiczna - czy usunąć ze zwróconej ramki danych
-#' wiersze opisujące sumy w podgrupach?
+#' wiersze opisujące sumy rozkładów?
 #' @param usunOgolem wartość logiczna - czy usunąć ze zwróconej ramki danych
 #' wiersze opisujące rozkład brzegowy zmiennej zależnej?
 #' @param wartoscBD wektor jedno- lub dwuelementowy: wartości, przy pomocy
@@ -292,6 +298,7 @@ labels.tab_lbl2 = function(object, ...) {
 #' \code{\link[tidyr]{pivot_longer}}
 #' @param rownames wyłącznie dla zgodności ze wzorcem (\emph{generic}) metody
 #' \code{as_tibble}
+#' @method as_tibble tab_lbl2
 #' @importFrom tidyr pivot_longer
 #' @export
 as_tibble.tab_lbl2 = function(x, ..., .rows = NULL,
@@ -314,7 +321,7 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL,
   }
   atrybuty = attributes(x)
 
-  x = pivot_longer(as.data.frame(unclass(x)),
+  x = pivot_longer(as.data.frame(unclass(x), check.names = FALSE),
                    -1, names_to = c("rozklad", attributes(x)$nazwyZm$k),
                    names_pattern = "^(n|pct)_(.*)$",
                    names_repair = .name_repair)
@@ -422,13 +429,13 @@ as_tibble.tab_lbl2 = function(x, ..., .rows = NULL,
 #' @param niePrzeksztalcaj wartość logiczna - czy funkcja ma tylko usunąć
 #' z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
 #' \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
-#' \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)v
+#' \emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)
 #' @method as.data.frame tab_lbl2
 #' @importFrom tidyr as_tibble
 #' @export
 as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
                                   ..., usunSuma = FALSE, usunOgolem = FALSE,
-                                  wartoscBD = NULL, niePrzeksztalcaj = FALSE) {
+                                  wartoscBD = NULL, niePrzeksztalcaj = TRUE) {
   stopifnot(is.logical(niePrzeksztalcaj), length(niePrzeksztalcaj) == 1)
   stopifnot(niePrzeksztalcaj %in% c(TRUE, FALSE))
   if (niePrzeksztalcaj) {
@@ -450,6 +457,7 @@ as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
   attributes(x)$label = temp$label
   attributes(x)$sumowanie = temp$sumowanie
   attributes(x)$etykietaSuma = temp$etykietaSuma
+  attributes(x)$etykietaOgolem = temp$etykietaOgolem
   attributes(x)$etykietaBD = temp$etykietaBD
   return(x)
 }
@@ -462,6 +470,7 @@ as.data.frame.tab_lbl2 = function(x, row.names = NULL, optional = FALSE,
   attributes(x)$label = temp$label
   attributes(x)$sumowanie = temp$sumowanie
   attributes(x)$etykietaSuma = temp$etykietaSuma
+  attributes(x)$etykietaOgolem = temp$etykietaOgolem
   attributes(x)$etykietaBD = temp$etykietaBD
   return(x)
 }

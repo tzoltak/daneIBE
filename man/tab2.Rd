@@ -70,7 +70,7 @@ tab2(
   usunSuma = FALSE,
   usunOgolem = FALSE,
   wartoscBD = NULL,
-  niePrzeksztalcaj = FALSE
+  niePrzeksztalcaj = TRUE
 )
 }
 \arguments{
@@ -135,7 +135,7 @@ jeśli przy tworzeniu rozkładu stosowano ważenie)}
 \code{as_tibble}}
 
 \item{usunSuma}{wartość logiczna - czy usunąć ze zwróconej ramki danych
-wiersze opisujące sumy w podgrupach?}
+wiersze opisujące sumy rozkładów?}
 
 \item{usunOgolem}{wartość logiczna - czy usunąć ze zwróconej ramki danych
 wiersze opisujące rozkład brzegowy zmiennej zależnej?}
@@ -157,7 +157,7 @@ zmiennej prezentowanej w kolumnach}
 \item{niePrzeksztalcaj}{wartość logiczna - czy funkcja ma tylko usunąć
 z obiektu klasę \code{tab_lbl2} i zwrócić go jako \emph{zwykłą} ramkę danych,
 \strong{bez} dokonywania przekształcenia z postaci \emph{szerokiej} do
-\emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)v}
+\emph{długiej})? (domyślnie funkcja dokonuje przekształcenia)}
 }
 \value{
 \strong{tab2}
@@ -185,7 +185,7 @@ Pierwsza zwracana kolumna rozkładu co do zasady jest \emph{czynnikiem}, chyba
 }
 W takim przypadku będzie mieć ona takiego typu, jaki kolumna miała w danych
 wejściowych.
-\strong{metoda as.data.frame}
+\strong{metoda as_tibble}
 W zależności od wartości parametru \code{niePrzeksztalcaj}:
 \itemize{
   \item{\emph{tibble} z rozkładami przekształconymi do postaci \emph{długiej},}
@@ -201,9 +201,14 @@ połączeniem \emph{ramki danych} z informacjami o - zwykle złożonym -
 schemacie doboru próby, tworzonym przez funkcje pakietu \emph{srvyr}). Radzi
 też sobie ze zmiennymi etykietowanymi (konwertując je na \emph{czynniki}).
 
-Metoda \code{as.data.frame} pozwala przekształcić zwracane zestawienie
+Metoda \code{as_tibble} pozwala przekształcić zwracane zestawienie
 w ramkę danych w postaci \emph{długiej}, przydatną np. do rysowania wykresów
 przy pomocy \emph{ggplot2} (czyli działa analogicznie,jak metoda
 \code{as.data.frame} dla obiektów zwracanych przez funkcję
-\code{\link[base]{table}} z pakietu \emph{base}).
+\code{\link[base]{table}} z pakietu \emph{base}). Metoda \code{as.data.frame}
+również jest dostępna, ale domyślnie nie przekształca tabeli (usuwa jedynie
+klase \code{tab_n}), gdyż inaczej przygotowanych tabel z rozkładami nie
+dawałyby się bezproblemowo używać w połączeniu z funkcją
+\code{\link[knitr]{kable}} z pakietu \emph{kable} (która to funkcja wywołuje
+wywołuje metodę \code{as.data.frame} na przekazywanym jej obiekcie).
 }

@@ -164,6 +164,7 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
       } else {
         tab$etykieta[is.na(tab$etykieta)] = "NA"
       }
+      stopifnot(is.character(etykietaBD))
     }
     # obejście ew. problemów z kodowaniem etykiet
     if (any(is.na(nchar(tab$etykieta, "chars", TRUE)))) {

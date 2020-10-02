@@ -3,7 +3,7 @@
 \docType{data}
 \name{przyklad}
 \alias{przyklad}
-\title{Przykladowe dane.}
+\title{Przykladowe dane}
 \format{
 Ramka danych ze 100 wierszami i 6 kolumnami:
 \itemize{
