@@ -34,7 +34,8 @@ tab.data.frame = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
   if (length(zmienna) == 0) stop("Nie podano zmiennej.")
   if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
   if (!(!!zmienna %in% names(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
-  tab.default(x[[zmienna[[1]]]], procenty, d, suma, etykietaSuma, etykietaBD)
+  tab.default(x[[zmienna[[1]]]], procenty = procenty, d = d, suma = suma,
+              etykietaSuma = etykietaSuma, etykietaBD = etykietaBD)
 }
 #' @rdname tab
 #' @importFrom rlang as_name
@@ -46,7 +47,9 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, d = 1, suma = TRUE,
   if (length(zmienna) == 0) stop("Nie podano zmiennej.")
   if (length(zmienna) > 1) stop("Podano więcej niż jedną zmienną.")
   zmienna = zmienna[[1]]
-  if (!(as_name(zmienna) %in% colnames(x))) stop("Podanej zmiennej nie ma w podanej ramce danych.")
+  if (!(as_name(zmienna) %in% colnames(x))) {
+    stop("Podanej zmiennej nie ma w podanej ramce danych.")
+  }
   stopifnot(is.logical(procenty), length(procenty) == 1,
             is.numeric(d), length(d) == 1,
             is.logical(suma), length(suma) == 1,
@@ -164,7 +167,6 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
       } else {
         tab$etykieta[is.na(tab$etykieta)] = "NA"
       }
-      stopifnot(is.character(etykietaBD))
     }
     # obejście ew. problemów z kodowaniem etykiet
     if (any(is.na(nchar(tab$etykieta, "chars", TRUE)))) {
@@ -176,6 +178,11 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
     }
   } else {
     sum$x = etykietaSuma
+    if (!is.null(etykietaBD)) {
+      if (!is.na(etykietaBD)) {
+        tab$x[is.na(tab$x)] = etykietaBD
+      }
+    }
   }
   if (suma) {
     tab = rbind(tab, sum)
@@ -184,6 +191,6 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
   if (!is.null(label)) {
     attributes(tab)$label = label
   }
-  class(tab) = c("tab_lbl", class(tab))
-  return(tab)
+  return(structure(tab,
+                   class = c("tab_lbl", class(tab))))
 }

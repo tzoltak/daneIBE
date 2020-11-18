@@ -163,14 +163,15 @@ tab_w = function(x, wybrane, wyklucz, kierunek = c("kolumny", "wiersze"),
     names(x)[1] = "pozycja"
   }
 
-  class(x) = c("tab_lbl_n", class(x))
-  attributes(x)$nazwyZm = pozycje
-  attributes(x)$klasyZm = atrybuty$klasyZm
-  attributes(x)$label = atrybuty$label
-  attributes(x)$kierunek = kierunek
-  attributes(x)$etykietaSuma = NA
-  attributes(x)$etykietaBD = NA
-  attributes(x)$etykietaOgolem = etykietaOgolem
+  x = structure(as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE),
+                class = c("tab_lbl_n", class(x)),
+                nazwyZm = pozycje,
+                klasyZm = atrybuty$klasyZm,
+                label = atrybuty$label,
+                kierunek = kierunek,
+                etykietaSuma = NA,
+                etykietaBD = NA,
+                etykietaOgolem = etykietaOgolem)
   return(x)
 }
 #' @importFrom rlang is_quosure quo_is_missing

@@ -54,8 +54,7 @@ labels.data.frame = function(object, SIMPLIFY = TRUE, ...) {
       }
     }))
   }
-  class(lab) = c("var_labels", "labels", class(lab))
-  return(lab)
+  return(structure(lab, class = c("var_labels", "labels", class(lab))))
 }
 #' @rdname labels
 #' @export
@@ -81,8 +80,7 @@ labels.list = function(object, SIMPLIFY = TRUE, ...) {
       }
     }))
   }
-  class(lab) = c("var_labels", "labels", class(lab))
-  return(lab)
+  return(structure(lab, class = c("var_labels", "labels", class(lab))))
 }
 #' @rdname labels
 #' @export
@@ -94,8 +92,7 @@ labels.haven_labelled = function(object, ...) {
     return(NULL)
   }
   lab = attributes(object)$labels
-  class(lab) = c("val_labels", "labels", class(lab))
-  return(lab)
+  return(structure(lab, class = c("val_labels", "labels", class(lab))))
 }
 #' @rdname labels
 #' @export
@@ -137,8 +134,7 @@ value_labels.data.frame = function(object, ...) {
       return(NULL)
     }
   })
-  class(object) = c("val_labels_list", class(object))
-  return(object)
+  return(structure(object, class = c("val_labels_list", class(object))))
 }
 #' @rdname labels
 #' @export
@@ -149,8 +145,7 @@ value_labels.default = function(object, ...) {
 #' @export
 `[.val_labels_list` = function(x, ...) {
   x = NextMethod("[")
-  class(x) = c("val_labels_list", class(x))
-  return(x)
+  return(structure(x, class = c("val_labels_list", class(x))))
 }
 #' @rdname labels
 #' @export

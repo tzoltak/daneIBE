@@ -563,14 +563,15 @@ sformatuj_rozklad2 = function(x, zmW, zmK, sumowanie, liczby, procenty,
     x[[as_name(zmW)]] = factor(x[[as_name(zmW)]], x[[as_name(zmW)]])
   }
   # czynności końcowe
-  x = as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE)
-  class(x) = c("tab_lbl2", class(x))
-  attributes(x)$nazwyZm = list(w = as_name(zmW), k = as_name(zmK))
-  attributes(x)$klasyZm = klasyZm
-  attributes(x)$label = labels
-  attributes(x)$sumowanie = sumowanie
-  attributes(x)$etykietaSuma = etykietaSuma
-  attributes(x)$etykietaOgolem = etykietaOgolem
-  attributes(x)$etykietaBD = etykietaBD
-  return(x)
+  x = structure(
+    as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE),
+    class = c("tab_lbl2", class(x)),
+    nazwyZm = list(w = as_name(zmW), k = as_name(zmK)),
+    klasyZm = klasyZm,
+    label = labels,
+    sumowanie = sumowanie,
+    etykietaSuma = etykietaSuma,
+    etykietaOgolem = etykietaOgolem,
+    etykietaBD = etykietaBD)
+  return()
 }

@@ -441,13 +441,14 @@ sformatuj_rozklad_n = function(x, zm, kierunek, liczby, procenty,
     x = select(x, -starts_with("pct_"))
   }
 
-  class(x) = c("tab_lbl_n", class(x))
-  attributes(x)$nazwyZm = zm
-  attributes(x)$klasyZm = klasyZm
-  attributes(x)$label = labels
-  attributes(x)$kierunek = kierunek
-  attributes(x)$etykietaSuma = etykietaSuma
-  attributes(x)$etykietaBD = etykietaBD
-  attributes(x)$etykietaOgolem = NULL
+  x = structure(as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE),
+                class = c("tab_lbl_n", class(x)),
+                nazwyZm = zm,
+                klasyZm = klasyZm,
+                label = labels,
+                kierunek = kierunek,
+                etykietaSuma = etykietaSuma,
+                etykietaBD = etykietaBD,
+                etykietaOgolem = NULL)
   return(x)
 }
