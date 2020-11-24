@@ -191,6 +191,5 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
   if (!is.null(label)) {
     attributes(tab)$label = label
   }
-  return(structure(tab,
-                   class = c("tab_lbl", class(tab))))
+  return(structure(tab, class = c("tab_lbl", class(tab))))
 }

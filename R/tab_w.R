@@ -163,16 +163,16 @@ tab_w = function(x, wybrane, wyklucz, kierunek = c("kolumny", "wiersze"),
     names(x)[1] = "pozycja"
   }
 
-  x = structure(as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE),
-                class = c("tab_lbl_n", class(x)),
-                nazwyZm = pozycje,
-                klasyZm = atrybuty$klasyZm,
-                label = atrybuty$label,
-                kierunek = kierunek,
-                etykietaSuma = NA,
-                etykietaBD = NA,
-                etykietaOgolem = etykietaOgolem)
-  return(x)
+  return(structure(as.data.frame(x,
+                                 check.names = FALSE, stringsAsFactors = FALSE),
+                   class = c("tab_lbl_n", class(x)),
+                   nazwyZm = pozycje,
+                   klasyZm = atrybuty$klasyZm,
+                   label = atrybuty$label,
+                   kierunek = kierunek,
+                   etykietaSuma = NA,
+                   etykietaBD = NA,
+                   etykietaOgolem = etykietaOgolem))
 }
 #' @importFrom rlang is_quosure quo_is_missing
 quo_liczby_na_tekst = function(x) {
