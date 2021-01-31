@@ -16,6 +16,7 @@ print.tab_lbl = function(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",",
   assert_print_tab(dProcenty, dLiczby, decimal.mark)
 
   if (hasName(x, "etykieta")) {
+    x$etykieta[!is.na(x$`wartość`) & is.na(x$etykieta)] = "<brak>"
     if (hasName(attributes(x), "suma")) {
       if (attributes(x)$suma) {
         dl = max(nchar(x$etykieta))
@@ -30,11 +31,12 @@ print.tab_lbl = function(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",",
   options(scipen = scipen)
   if (hasName(attributes(x), "suma")) {
     if (attributes(x)$suma) {
-      dl = max(nchar(x$`wartość`))
+      dl = max(sapply(x$`wartość`,
+                      function(x) {ifelse(is.na(x), 2, nchar(x))}))
       if (
         all(!is.na(suppressWarnings(
           as.numeric(setdiff(x$`wartość`,
-                             attributes(x)$etykietaSuma)))))) {
+                             c(attributes(x)$etykietaSuma, "", NA))))))) {
         x$`wartość` = format(x$`wartość`, width = dl, justify = "right")
       } else {
         x$`wartość` =

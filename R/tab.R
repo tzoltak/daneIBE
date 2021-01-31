@@ -13,8 +13,7 @@
 #' @param etykietaBD ciąg znaków - etykieta, którą w przygotowanym zestawieniu
 #' mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
 #' zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
-#' usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
-#' zestawienia
+#' usunięciem wierszy opisujących braki danych ze zwracanego zestawienia
 #' @param w opcjonalnie wektor liczbowy lub kolumna obiektu \code{x}, której
 #' wartości zawierają wagi obserwacji, które powinny zostać uwzględnione przy
 #' obliczaniu rozkładu
@@ -65,14 +64,14 @@ tab.tbl_svy = function(x, ..., procenty = TRUE, suma = TRUE,
   assert_tab_df(x, zmienna)
   zmienna = zmienna[[1]]
   assert_tab_wektor(procenty, suma, etykietaSuma, etykietaBD)
+  if (is.null(etykietaBD)) {
+    x = filter(x, !is.na(!!zmienna))
+  }
 
   tab = survey_count(x, !!zmienna, name = "Freq", vartype = NULL)
   names(tab)[1] = 'x'
   tab = as.data.frame(tab, stringsAsFactors = FALSE)
 
-  if (is.null(etykietaBD)) {
-    tab = tab[!is.na(tab$x), ]
-  }
   tab = sformatuj_rozklad(tab,
                           label(x$variables[[as.name(zmienna)]]),
                           value_labels(x$variables[[as.name(zmienna)]]),
@@ -109,16 +108,17 @@ tab.twophase2 = function(x, ..., procenty = TRUE, suma = TRUE,
 #' @export
 tab.default = function(x, ..., procenty = TRUE, suma = TRUE,
                        etykietaSuma = "ŁĄCZNIE", etykietaBD = NA, w = NULL) {
+  if (is.null(x)) stop("Obiekt przekazany argumentem 'x' nie istnieje (ma wartość NULL).")
   assert_tab_wektor(procenty, suma, etykietaSuma, etykietaBD)
   w = assert_w(w, x)
   if (is.null(etykietaBD)) {
-    exclude = NA
-  } else {
-    exclude = NULL
+    w = w[!is.na(x)]
+    x = x[!is.na(x)]
   }
-  tab = tapply(w, x, sum, na.rm = TRUE)
+  tab = tapply(w, addNA(as.factor(x), ifany = TRUE),
+               sum, na.rm = TRUE, default = 0)
   tab = data.frame(x = rownames(tab),
-                   Freq = as.vector(tab))# as.data.frame(tab, stringsAsFactors = FALSE)
+                   Freq = as.vector(tab))
   tab = sformatuj_rozklad(tab, label(x), value_labels(x),
                           procenty, suma, etykietaSuma, etykietaBD)
   return(tab)
@@ -154,7 +154,7 @@ sformatuj_rozklad = function(tab, label = NULL, value_labels = NULL,
       if (!is.na(etykietaBD)) {
         tab$etykieta[is.na(tab$etykieta)] = etykietaBD
       } else {
-        tab$etykieta[is.na(tab$etykieta)] = "NA"
+        tab$etykieta[is.na(tab$etykieta) & is.na(tab$x)] = "NA"
       }
     }
     # obejście ew. problemów z kodowaniem etykiet

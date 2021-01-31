@@ -6,7 +6,7 @@
 # 2) dokonane zmiany były jak najmniejsze
 #' @importFrom utils combn
 zaokraglij_do_sumy = function(x, d, ostatniSuma = FALSE) {
-  stopifnot(is.numeric(x),
+  stopifnot(is.numeric(x), !anyNA(x),
             is.numeric(d), length(d) == 1, as.integer(d) == d,
             ostatniSuma %in% c(FALSE, TRUE))
   if (ostatniSuma) {

@@ -108,8 +108,7 @@ ignorowany, jeśli \code{suma} równe \code{FALSE})}
 \item{etykietaBD}{ciąg znaków - etykieta, którą w przygotowanym zestawieniu
 mają być opisane braki danych (\code{NA}); domyślna wartość oznacza, że
 zostaną one opisane jako "NA"; podanie \code{NULL} będzie skutkować
-usunięciem kolumn i wierszy opisujących braki danych ze zwracanego
-zestawienia}
+usunięciem wierszy opisujących braki danych ze zwracanego zestawienia}
 
 \item{w}{opcjonalnie wektor liczbowy lub kolumna obiektu \code{x}, której
 wartości zawierają wagi obserwacji, które powinny zostać uwzględnione przy

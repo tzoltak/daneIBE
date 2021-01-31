@@ -9,6 +9,23 @@ print.tab_lbl2 = function(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",",
   optScipen = options()$scipen
   on.exit(options(scipen = optScipen))
   options(scipen = scipen)
+  if (attributes(x)$sumowanie %in% "kolumny") {
+    for (i in grep("^n_", names(x))) {
+      x[, i] = zaokraglij_do_sumy(x[, i], dLiczby, ostatniSuma = TRUE)
+    }
+    for (i in grep("^pct_", names(x))) {
+      x[, i] = zaokraglij_do_sumy(x[, i], dProcenty, ostatniSuma = TRUE)
+    }
+  } else if (attributes(x)$sumowanie %in% "wiersze") {
+    for (i in 1:nrow(x)) {
+      kolumnyN = grep("^n_", names(x))
+      kolumnyPct = grep("^pct_", names(x))
+      x[i, kolumnyN] = zaokraglij_do_sumy(unlist(x[i, kolumnyN]),
+                                          dLiczby, ostatniSuma = TRUE)
+      x[i, kolumnyPct] = zaokraglij_do_sumy(unlist(x[i, kolumnyPct]),
+                                            dProcenty, ostatniSuma = TRUE)
+    }
+  }
   for (i in grep("^n_", names(x))) {
     x[, i] = format(round(x[, i], dLiczby), digits = 0, nsmall = dLiczby,
                     decimal.mark = decimal.mark, ...)

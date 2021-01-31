@@ -5,6 +5,25 @@ Do zrobienia:
 
 ------------------------------------------------------------------------
 
+# daneIBE 0.7.3 (31.1.2021)
+
+## Udoskonalenia
+
+-   *Inteligentne zaokrąglanie* stosowane jest również przez metody `print()` dla obiektów zwracanych przez `tab_n()` i `tab2()`, przy czym dla tych drugich tylko wtedy, kiedy wybrane zostało procentowanie w wierszach lub w kolumnach.
+-   Metoda `print()` dla obiektów zwracanych przez `tab()` wyświetla <brak> jako etykiety dla wartości, które występują w danych, ale nie posiadają zdefiniowanej etykiety wartości.
+
+## Naprawione błędy
+
+-   Funkcja `tab()` znów poprawnie obsługuje braki danych i argument `etykietaBD = NULL` (poprawka po regresji powstałej w wyniku dodania do `tab()` możliwości użycia wag).
+-   Metoda `print()` dla obiektów zwracanych przez `tab()` wykrywa więcej sytuacji, w których powinna wyrównać wartości kolumny *wartość* do prawej.
+
+## Zmiany wewnętrzne
+
+-   Porządki po zmianie API `tab()`.
+-   Funkcja `zaokraglij_do_sumy()` otwarcie komunikuje, że nie toleruje braków danych w zaokrąglanym wektorze.
+
+------------------------------------------------------------------------
+
 # daneIBE 0.7.2 (8.1.2021)
 
 ## Zmiany interfejsu
@@ -37,7 +56,7 @@ Do zrobienia:
 
 # daneIBE 0.7.1 (18.11.2020)
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   tab() znów działa (poprawiony błąd z wywołaniem structure() przy zwracaniu wyników działania) i znów reaguje na dodatkowe argumenty w metodzie dla ramki danych; poza tym lepiej obsługuje argument etykietaBD.
 
@@ -45,7 +64,7 @@ Do zrobienia:
 
 # daneIBE 0.7.0 (2.10.2020)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   tab_n() pozwala tworzyć zestawienia rozkładów brzegowych wielu zmiennych (co może być sensowne zwłaszcza, jeśli mają ten sam zbiór możliwych odpowiedzi); wywołanie jej stanowi też pierwszy krok na drodze do uzyskania zestawienia odpowiedzi na pytanie "wielokrotnego wyboru";
 
@@ -56,7 +75,7 @@ Do zrobienia:
 
     -   funkcja nieco nieortodoksyjnie wykorzystuje "tidy evaluation" do wskazywania przez użytkownika, które wartości mają być zliczane (jako wybrane przez respondenta), a które ew. wykluczane z podstawy procentowania.
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   metoda as.data.frame() domyślnie nie przeprowadza przekształcenia na formę długą, a jedynie sprowadza obiekt do formy "standardowej ramki danych", co pozwala bez problemy używać obiekty zwracane przez tab2(), tab_n() i tab_w() w wywołaniach kable().
 
@@ -64,7 +83,7 @@ Do zrobienia:
 
 -   nowy zbiór danych (przykladWO) do prezentowania sposobów użycia funkcji tab_n() i tab_w().
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   metody as_tibble() i as.data.frame() nie zamieniają wartości zmiennych, które zostały zapisane w nazwach kolumn zestawienia na nazwy będące poprawnymi wyrażeniami języka R.
 
@@ -72,11 +91,11 @@ Do zrobienia:
 
 # daneIBE 0.6.4 (30.09.2020)
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   tab() otrzymała dodatkowy argument `etykietaBD`, działający analogicznie, jak ten sam argument w tab2() (w szczególności pozwala usunąć braki danych ze zwracanego rozkładu).
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   tab() najpierw konwertuje zmienne etykietowane na czynniki, a dopiero potem zbiera informacje o klasach zmiennych ("przywracanie formatów" i tak nie jest zaimplementowane dla zmiennych etykietowanych);
 -   trochę poprawek w dokumentacji tab();
@@ -86,14 +105,14 @@ Do zrobienia:
 
 # daneIBE 0.6.3 (5.05.2020)
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   tab2() w trybie tworzenia rodziny rozkładów warunkowych (sumowanie równe "kolumny" lub "wiersze") zwraca również kolumnę/wiersz z rozkładem brzegowym zmiennej zależnej - etykietę kolumny/wiersza można podać argumentem `etykietaOgolem`, albo ustawić jego wartość na NA lub NULL, aby wskazać, że zwrócony rozkład ma nie zawierać takiej kolumny/takiego wiersza;
 
     -   aby zmniejszyć ryzyko nieporozumień domyślną etykietę kolumny/wiersza sumy zmieniono z "ŁĄCZNIE" na "SUMA";
     -   metody as_tibble() i as.data.frame() zyskały nowy argument usunLacznie, który pozwala pozbyć się wierszy opisujących rozkład brzegowy zmiennej zależnej ze zwracanej ramki danych.
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   as_tibble() (i as.data.frame()) wywołane na obiekcie zwróconym przez tab2() poprawnie radzą sobie z przywracaniem formatu zmiennej opisywanej w wierszach tabeli (jeśli takie przywrócenie formatu jest możliwe).
 
@@ -101,7 +120,7 @@ Do zrobienia:
 
 # daneIBE 0.6.2 (5.05.2020)
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   tab() nie radzi sobie ze zmiennymi tekstowymi ani liczbowymi w ramach obiektów tbl_svy, jeśli zawierają braki danych (przyczyna problemu to nieradzenie sobie w takiej sytuacji przez funkcję survey_count() z pakietu srvyr - aby to obejść, tab() wewnętrznie konwertuje takie zmienne na czynniki).
 
@@ -109,11 +128,11 @@ Do zrobienia:
 
 # daneIBE 0.6.1 (28.04.2020)
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   obiekty zwracane przez tab2() otrzymały metodę as_tibble(), które zwraca tibble, w odróżnieniu od metody as.data.frame(), która zwraca "base'ową" ramkę danych - pozwala to uniknąć stosowania kuriozalnej składni z wywołaniem as.data.frame() na wynikach wywołania as.data.frame(), żeby uzyskać "base'ową" ramkę danych.
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   tab() nie radzi sobie z przywróceniem typu, jaki miały wartości liczbowe zmiennej klasy haven_labelled.
 
@@ -121,7 +140,7 @@ Do zrobienia:
 
 # daneIBE 0.6.0 (19.04.2020)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   tab2() pozwala tworzyć łączne rozkłady liczebności i łączne rozkłady częstości lub rodziny warunkowych rozkładów częstości dwóch zmiennych:
 
@@ -133,7 +152,7 @@ Do zrobienia:
 
 -   funkcja label()\<- pozwalająca przypisać wartość atrybutowi "label" obiektu.
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   Uzupełniona dokumentacja i plik README.md.
 
@@ -141,13 +160,13 @@ Do zrobienia:
 
 # daneIBE 0.5.0 (9.04.2020)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   metoda tab() dla ramek danych (drugi argument wskazuje kolumnę, której rozkład ma zostać wygenerowany - obsługuje "tidy evaluation"),
 -   metoda tab() dla obiektów tbl_svy tworzonych przez pakiet srvyr (API identyczne, jak w metodzie dla ramek danych),
 -   label() - zwraca etykietę przypisaną do wektora (do zastosowania w odniesieniu do obiektu, który był kolumną ramki danych, ale został już z niej "wybrany").
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   tab() nie drukuje tabeli na konsoli, lecz odpowiada za to metoda print() zwracanego przez nią obiektu.
 
@@ -155,11 +174,11 @@ Do zrobienia:
 
 # daneIBE 0.4.0 (11.12.2019)
 
-## Aktualizacje:
+## Aktualizacje
 
 -   funkcje i metody działające na etykietach współpracują z pakietem haven w wersjach \>= 2.0.0 (tj. odwołują się do klasy "haven_labelled").
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   metoda print() dla listy etykiet wartości zmiennych.
 
@@ -167,7 +186,7 @@ Do zrobienia:
 
 # daneIBE 0.3.1 (4.09.2018)
 
-## Poprawione błędy:
+## Poprawione błędy
 
 -   zastosuj_codebook() radzi sobie z kolumnami w wejściowym zbiorze, które wczytują się jako innego typu niż numeric lub character.
 
@@ -175,7 +194,7 @@ Do zrobienia:
 
 # daneIBE 0.3.0 (6.12.2017)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   metody funkcji labels() dla ramek danych, list i obiektów klasy labelled i funkcja value_labels(), a także powiązane z wynikami ich działania metody funkcji print() pozwalają na wygodny dostęp do etykiet zmiennych i etykiet wartości.
 
@@ -183,7 +202,7 @@ Do zrobienia:
 
 # daneIBE 0.2.0 (5.12.2017)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   tab() generuje rozkład(y) liczebności i częstości jednej zmiennej w ramach tej samej tabeli, w miarę możliwości wykorzystując też etykiety wartości.
 
@@ -191,7 +210,7 @@ Do zrobienia:
 
 # daneIBE 0.1.2 (22.11.2017)
 
-## Udoskonalenia:
+## Udoskonalenia
 
 -   zastosuj_codebook() nieco bardziej wyrozumiała wobec nazw kolumn w pliku z codebookiem.
 
@@ -199,7 +218,7 @@ Do zrobienia:
 
 # daneIBE 0.1.1 (30.10.2017)
 
-## Naprawione błędy:
+## Naprawione błędy
 
 -   zastosuj_codebook() używa wartości kolumny 'opis' z codebooka, gdy kolumna 'krotki opis' jest pusta;
 -   labelled_na_foreigndata() zachowuje etykiety wartości dla wszystkich zmiennych.
@@ -208,6 +227,6 @@ Do zrobienia:
 
 # Publikacja daneIBE 0.1.0 (07.10.2017)
 
-## Nowe funkcje:
+## Nowe funkcje
 
 -   zastosuj_codebook(); labelled_na_foreigndta().
