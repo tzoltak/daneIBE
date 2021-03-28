@@ -297,6 +297,7 @@ sformatuj_rozklad_n = function(x, zm, kierunek, liczby, procenty,
   x = ungroup(x)
   temp = ungroup(temp)
   temp$wartosc = as.character(etykietaSuma)
+  x$wartosc = as.character(x$wartosc)
   x = bind_rows(x, temp)
   if (!is.na(etykietaBD)) {
     x$wartosc[is.na(x$wartosc)] = as.character(etykietaBD)

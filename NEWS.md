@@ -5,7 +5,15 @@ Do zrobienia:
 
 ------------------------------------------------------------------------
 
-# daneIBE 0.7.3 (31.1.2021)
+# daneIBE 0.7.4 (28.03.2021)
+
+## Naprawione błędy
+
+-   Funkcja `tab_n()` już nie zwraca błędu w sytuacji, kiedy wszystkie zmienne, których rozkłady mają być zwrócone są wektorami liczbowymi lub logicznymi.
+
+------------------------------------------------------------------------
+
+# daneIBE 0.7.3 (31.01.2021)
 
 ## Udoskonalenia
 
@@ -24,7 +32,7 @@ Do zrobienia:
 
 ------------------------------------------------------------------------
 
-# daneIBE 0.7.2 (8.1.2021)
+# daneIBE 0.7.2 (8.01.2021)
 
 ## Zmiany interfejsu
 
