@@ -24,7 +24,7 @@ library(daneIBE)
 
 Funkcja `tab()` tworzy tabelę z rozkładem liczebności i rozkładem częstości jednej zmiennej.
 
-Jest przeznaczona przede wszystkim do analiz eksploracyjnych z wykorzystaniem zmiennych *etykietowanych* - pozwala obejrzeć ich rozkład, wraz z mapowaniem wartości-etykiety bez konieczności konwertowania ich na inny typ zmiennej. Na \*normalnych
+Jest przeznaczona przede wszystkim do analiz eksploracyjnych z wykorzystaniem zmiennych *etykietowanych* - pozwala obejrzeć ich rozkład, wraz z mapowaniem wartości-etykiety bez konieczności konwertowania ich na inny typ zmiennej.
 
 Może być wywołana na:
 
@@ -34,32 +34,42 @@ Może być wywołana na:
 
 -   obiekcie *tbl\_svy* (czyli obiekcie będącym połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzonym przez funkcje pakietu *srvyr*);
 
-    -   pozwala to uwzględnić ważenie.
+-   obiekcie *survey.design* lub *svyrep.design* (obiektach ze złożonymi schematami doboru próby, tworzonymi przez funkcje pakietu *survey*)
 
-W przypadku drugiego i trzeciego z ww. drugim argumentem podaje się zmienną (kolumnę), której rozkład ma być wygenerowany (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsługuje *tidy evaluation*).
+W każdym poza pierwsztm spośród ww. przypadków drugim argumentem podaje się zmienną (kolumnę), której rozkład ma być wygenerowany (nazwa kolumny może być podana jako wyrażenie języka lub jako ciąg znaków, tj. w odniesieniu do swojego drugiego argumentu `tab()` obsługuje *tidy evaluation*).
+
+W przypadku obiektów ze schematami doboru próby (*tbl\_svy*, *survey.design* lub *svyrep.design*) przy tworzeniu rozkładu automatycznie uwzględnione zostanie ważenie wynikające ze schematu doboru próby. W innych przypadkach wektor wag można podać dodatkowym argumentem `w`.
 
 Przykład użycia:
 
 ```{r}
 tab(mtcars$cyl)
 tab(mtcars, cyl)
-tab(mtcars, cyl, d = 2, etykietaSuma = "Sum")
+tab(mtcars, cyl, etykietaSuma = "Sum")
 
 library(haven)
 mtcars$cyl = labelled(mtcars$cyl, c("cztery" = 4, "sześć" = 6, "osiem" = 8),
                       "liczba cylindrów")
 tab(mtcars, cyl)
+
+library(survey)
+mtcarsSvy = svydesign(~1, 1, data = mtcars)
+tab(mtcarsSvy, cyl)
+
+library(srvyr)
+mtcarsSrv = as_survey(mtcarsSvy)
+tab(mtcarsSrv, cyl)
 ```
 
 #### Funkcja tab2()
 
-Funkcja generuje rozkład łączny liczebności i rozkład łączny lub rodzinę warunkowych rozkładów częstości dwóch zmiennych. Jako pierwszy argument przyjmuje *ramkę danych* lub obiekt *tbl\_svy* (będący połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzony przez funkcje pakietu *srvyr*). Radzi też sobie ze zmiennymi etykietowanymi (konwertując je na *czynniki*).
+Funkcja generuje rozkład łączny liczebności i rozkład łączny lub rodzinę warunkowych rozkładów częstości dwóch zmiennych. Jako pierwszy argument przyjmuje *ramkę danych*, obiekt *tbl\_svy*, *survey.design* lub *svyrep.design* (będące połączeniem *data.frame* z informacjami o złożonym schemacie doboru próby, tworzony przez funkcje pakietów, odpowiednio *srvyr* lub *survey*) albo *table* lub *ftable* (zwracane przez funkcje o tych samych nazwach, zawarte w podstawowej instlacji R). Radzi też sobie ze zmiennymi etykietowanymi (konwertując je na *czynniki*).
 
 Metoda `as_tibble` pozwala przekształcić zwracane zestawienie w *ramkę danych* (ściśle w *tibble*) w postaci *długiej*, przydatną np. do rysowania wykresów przy pomocy *ggplot2* (czyli działa analogicznie, jak metoda `as.data.frame` dla obiektów zwracanych przez funkcję `table` z pakietu *base*).
 
 Argumenty:
 
-1.  *Ramka danych* lub obiekt *tbl\_svy*.
+1.  *Ramka danych*, obiekt *tbl\_svy*, *survey.design*, *svyrep.design*, *table* lub *ftable*.
 
 2.  Zmienna, której wartości mają zostać umieszczone w wierszach tabeli.
 
