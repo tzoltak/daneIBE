@@ -124,7 +124,7 @@ Metoda `as.data.frame` również jest dostępna, ale domyślnie nie przekształc
 
 Argumenty:
 
-1.  *Ramka danych* lub obiekt *tbl\_svy*.
+1.  *Ramka danych*, obiekt *tbl\_svy*, *survey.design*, *svyrep.design*, *table* lub *ftable*.
 
 2.  Zmienne, których rozkłady mają zostać zwrócone podawane jako kolejne argumenty (można używać selektorów pakietu *dplyr*, np. `starts_with`).
 
