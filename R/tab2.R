@@ -123,11 +123,15 @@ tab2.data.frame = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
                  k = class(x[[as_name(zmK)]])[length(class(x[[as_name(zmK)]]))])
 
   # konwersja na czynniki
-  x[[as_name(zmW)]] = factor(x[[as_name(zmW)]],
-                             sort(unique(x[[as_name(zmW)]])))
+  if (!is.factor(x[[as_name(zmW)]])) {
+    x[[as_name(zmW)]] = factor(x[[as_name(zmW)]],
+                               sort(unique(x[[as_name(zmW)]])))
+  }
   x[[as_name(zmW)]] = addNA(x[[as_name(zmW)]], ifany = TRUE)
-  x[[as_name(zmK)]] = factor(x[[as_name(zmK)]],
-                             sort(unique(x[[as_name(zmK)]])))
+  if (!is.factor(x[[as_name(zmK)]])) {
+    x[[as_name(zmK)]] = factor(x[[as_name(zmK)]],
+                               sort(unique(x[[as_name(zmK)]])))
+  }
   x[[as_name(zmK)]] = addNA(x[[as_name(zmK)]], ifany = TRUE)
 
   # samo przygotowanie rozkładu
@@ -206,11 +210,15 @@ tab2.tbl_svy = function(x, zmW, zmK, sumowanie = c("brak", "kolumny",
                  k = class(x$variables[[as_name(zmK)]]))
 
   # konwersja na czynniki
-  x$variables[[as_name(zmW)]] = factor(x$variables[[as_name(zmW)]],
-                                       sort(unique(x$variables[[as_name(zmW)]])))
+  if (!is.factor(x$variables[[as_name(zmW)]])) {
+    x$variables[[as_name(zmW)]] = factor(x$variables[[as_name(zmW)]],
+                                         sort(unique(x$variables[[as_name(zmW)]])))
+  }
   x$variables[[as_name(zmW)]] = addNA(x$variables[[as_name(zmW)]], ifany = TRUE)
-  x$variables[[as_name(zmK)]] = factor(x$variables[[as_name(zmK)]],
-                                       sort(unique(x$variables[[as_name(zmK)]])))
+  if (!is.factor(x$variables[[as_name(zmK)]])) {
+    x$variables[[as_name(zmK)]] = factor(x$variables[[as_name(zmK)]],
+                                         sort(unique(x$variables[[as_name(zmK)]])))
+  }
   x$variables[[as_name(zmK)]] = addNA(x$variables[[as_name(zmK)]], ifany = TRUE)
 
   x = survey_count(x, !!zmW, !!zmK, vartype = NULL, .drop = FALSE)

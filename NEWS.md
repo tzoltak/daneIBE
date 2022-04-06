@@ -5,6 +5,14 @@ Do zrobienia:
 
 ------------------------------------------------------------------------
 
+# daneIBE 0.7.5 (6.04.2022)
+
+## Naprawione błędy
+
+-   Funkcja `tab2()` zachowuje zestaw poziomów zmiennych, które są czynnikami (również te poziomy, które nie występują w danych, na podstawie których tworzony jest rozkład).
+
+------------------------------------------------------------------------
+
 # daneIBE 0.7.4 (28.03.2021)
 
 ## Naprawione błędy

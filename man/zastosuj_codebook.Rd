@@ -34,9 +34,9 @@ CSV z danymi i pliku CSV z codebookiem (w formacie \emph{IBE'owym}).
 \examples{
 \dontrun{
 dane = zastosuj_codebook("plik z danymi.csv", "codebook.csv")
-naBrakiDanych = c("nie wiem", "trudno powiedzieÄ‡", "brak odpowiedzi",
-  "odmowa odpowiedzi", "nie potrafiÄ™ oceniÄ‡", "nie pamiÄ™tam",
-  "nie wiem/trudno powiedzieÄ‡", "nie wiem/nie pamiÄ™tam")
+naBrakiDanych = c("nie wiem", "trudno powiedzieć", "brak odpowiedzi",
+  "odmowa odpowiedzi", "nie potrafię ocenić", "nie pamiętam",
+  "nie wiem/trudno powiedzieć", "nie wiem/nie pamiętam")
 dane = zastosuj_codebook("plik z danymi.csv", "codebook.csv", "UTF-8", naBrakiDanych)
 }
 }

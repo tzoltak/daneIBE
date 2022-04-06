@@ -137,7 +137,6 @@ tab_n.data.frame = function(x, ..., kierunek = c("kolumny", "wiersze"),
   }
   x = pivot_longer(x, -names(wagi), names_to = "zmienna", values_to = "wartosc",
                    values_transform = przeksztalc)
-  # A tibble: 150 x 2)
   x$zmienna = factor(x$zmienna, zm)
   if (is.null(etykietaBD)) {
     x = x[!is.na(x$wartosc), ]
