@@ -5,6 +5,14 @@ Do zrobienia:
 
 ------------------------------------------------------------------------
 
+# daneIBE 0.7.6 (2.09.2022)
+
+## Naprawione błędy
+
+-   Usunięto stosowanie argumentu `digits=0` w wywołaniach `format()` (co zapewnia kompatybilność z R>=4.2.0).
+
+------------------------------------------------------------------------
+
 # daneIBE 0.7.5 (6.04.2022)
 
 ## Naprawione błędy

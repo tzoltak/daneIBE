@@ -45,19 +45,19 @@ print.tab_lbl = function(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",",
       }
       x$`liczebność` =
         format(zaokraglij_do_sumy(x$`liczebność`, dLiczby, ostatniSuma = TRUE),
-               digits = 0, nsmall = dLiczby, decimal.mark = decimal.mark, ...)
+               nsmall = dLiczby, decimal.mark = decimal.mark, ...)
       if (hasName(x, "częstość")) {
         x$`częstość` =
           format(zaokraglij_do_sumy(x$`częstość`, dProcenty, ostatniSuma = TRUE),
-                 digits = 0, nsmall = dProcenty, decimal.mark = decimal.mark,
+                 nsmall = dProcenty, decimal.mark = decimal.mark,
                  ...)
       }
     }
   }
   if (!is.character(x$`liczebność`)) { # gdy nie wiadomo, czy ma wiersz sumy
-    x$`liczebność` = format(round(x$`liczebność`, dLiczby), digits = 0,
+    x$`liczebność` = format(round(x$`liczebność`, dLiczby),,
                             nsmall = dLiczby, decimal.mark = decimal.mark, ...)
-    x$`częstość` = format(round(x$`częstość`, dProcenty), digits = 0,
+    x$`częstość` = format(round(x$`częstość`, dProcenty),,
                           nsmall = dProcenty, decimal.mark = decimal.mark, ...)
   }
   if (!is.null(label(x))) {

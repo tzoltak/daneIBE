@@ -27,11 +27,11 @@ print.tab_lbl2 = function(x, dProcenty = 1, dLiczby = 0, decimal.mark = ",",
     }
   }
   for (i in grep("^n_", names(x))) {
-    x[, i] = format(round(x[, i], dLiczby), digits = 0, nsmall = dLiczby,
+    x[, i] = format(round(x[, i], dLiczby), nsmall = dLiczby,
                     decimal.mark = decimal.mark, ...)
   }
   for (i in grep("^pct_", names(x))) {
-    x[, i] = format(round(x[, i], dProcenty), digits = 0, nsmall = dProcenty,
+    x[, i] = format(round(x[, i], dProcenty), nsmall = dProcenty,
                     decimal.mark = decimal.mark, ...)
   }
   print.data.frame(x, row.names = FALSE)
