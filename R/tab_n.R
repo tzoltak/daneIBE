@@ -65,6 +65,20 @@
 #'   \item{obiekt klasy \code{data.frame} (i tylko tej jednej) z rozkładami
 #'         w postacie \emph{szerokiej}.}
 #' }
+#' @examples
+#' tab_n(przykladWO, P1_1, P1_2, P1_3)
+#' tab_n(przykladWO, starts_with("P1_"))
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, kierunek = "w")
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, kierunek = "w",  etykietyZmiennych = TRUE)
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, procenty = FALSE)
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, etykietaSuma = "Suma")
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, etykietaBD = "brak danych")
+#'
+#' tab_n(przykladWO, P1_1, P1_2, P1_3, w = waga)
+#' as.data.frame(tab_n(przykladWO, P1_1, P1_2, P1_3))
+#' # aby uzyskać obiekt nadający się do wykorzystania
+#' # jako źródło danych do wykresu tworzonego przy pomocy pakietu ggplot2:
+#' dplyr::as_tibble(tab_n(przykladWO, P1_1, P1_2, P1_3), usunSuma = TRUE)
 #' @name tab_n
 #' @export
 tab_n = function(x, ..., kierunek, liczby, procenty, etykietaSuma,

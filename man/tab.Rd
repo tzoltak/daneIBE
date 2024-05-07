@@ -135,3 +135,20 @@ w notacji naukowej (czym większa, tym rzadziej R sosuje notację naukową - p.
 Funkcja generuje rozkład jednej zmiennej - liczebności i częstości -
 uwzględniając etykiety wartości.
 }
+\examples{
+# example code
+tab(mtcars$cyl)
+tab(mtcars, cyl)
+tab(mtcars, cyl, etykietaSuma = "Sum")
+
+mtcars$cyl = haven::labelled(mtcars$cyl,
+                             c("cztery" = 4, "sześć" = 6, "osiem" = 8),
+                             "liczba cylindrów")
+tab(mtcars, cyl)
+
+mtcarsSvy = survey::svydesign(~1, 1, data = mtcars)
+tab(mtcarsSvy, cyl)
+
+mtcarsSrv = srvyr::as_survey(mtcarsSvy)
+tab(mtcarsSrv, cyl)
+}

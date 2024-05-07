@@ -49,6 +49,30 @@
 #'   \item{obiekt klasy \code{data.frame} (i tylko tej jednej) z rozkładami
 #'         w postacie \emph{szerokiej}.}
 #' }
+#' @examples
+#' polprodukt = tab_n(przykladWO, starts_with("P1_"))
+#' polprodukt
+#'
+#' tab_w(polprodukt, "T")
+#' tab_w(polprodukt, "T", wykluczBD = FALSE)
+#' tab_w(polprodukt, "T", prefiksPozycji = "Jakie kwiaty lubisz:")
+#' tab_w(polprodukt, "T", kierunek = "w", prefiksPozycji = "Jakie kwiaty lubisz:")
+#' tab_w(polprodukt, "T", procenty = FALSE)
+#' tab_w(polprodukt, "T", etykietaOgolem = "Ogółem")
+#'
+#' # nieco bardziej skomplikowana sytuacja
+#' polprodukt2 = tab_n(przykladWO, starts_with("P2_"))
+#' polprodukt2
+#' tab_w(polprodukt2, c("T", 1, "Tak"))
+#'
+#' # nie ma to tutaj merytorycznego sensu, i prowadzi do ostrzeżenia ale jako
+#' # przykład, że można podać wartości, które mają zostać wykluczone z podstawy
+#' #procentowania
+#' tab_w(polprodukt2, c("T", 1, "Tak"), c(starts_with("n"), 0))
+#'
+#' # aby uzyskać obiekt nadający się do wykorzystania
+#' # jako źródło danych do wykresu tworzonego przy pomocy pakietu ggplot2:
+#' dplyr::as_tibble(tab_w(polprodukt2, c("T", 1, "Tak")))
 #' @name tab_w
 #' @importFrom dplyr as_tibble bind_rows distinct group_by summarise ungroup
 #' @importFrom rlang enquo quo_is_missing

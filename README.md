@@ -188,7 +188,7 @@ tab_w(polprodukt2, c("T", 1, "Tak"), c(starts_with("n"), 0))
 
 # aby uzyskać obiekt nadający się do wykorzystania
 # jako źródło danych do wykresu tworzonego przy pomocy pakietu ggplot2:
- %>% 
+as_tibble(tab_w(polprodukt2, c("T", 1, "Tak")))
 ```
 
 ## Funkcje wspomagające pracę ze zmiennymi etykietowanymi wczytanych przy pomocy pakietu *haven*

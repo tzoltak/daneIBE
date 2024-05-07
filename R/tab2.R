@@ -77,6 +77,30 @@
 #'   \item{obiekt klasy \code{data.frame} (i tylko tej jednej) z rozkładami
 #'         w postacie \emph{szerokiej}.}
 #' }
+#' @examples
+#' mtcars$cyl = haven::labelled(mtcars$cyl,
+#'                              c("cztery" = 4, "sześć" = 6, "osiem" = 8),
+#'                              "liczba cylindrów")
+#' tab2(mtcars, carb, cyl, "k")
+#' tab2(mtcars, carb, cyl, "w")
+#' tab2(mtcars, carb, cyl, "o")
+#' tab2(mtcars, carb, cyl)
+#' tab2(mtcars, carb, cyl, "k", liczby = FALSE)
+#' tab2(mtcars, carb, cyl, "k", procenty = FALSE)
+#' tab2(mtcars, carb, cyl, "k", etykietaSuma = "Suma")
+#' mtcars$carb[1:2] = NA
+#' tab2(mtcars, carb, cyl, "k")
+#' tab2(mtcars, carb, cyl, "k", etykietaBD = "brak danych")
+#'
+#' # choć hp jako wagi obserwacji są bez sensu
+#' tab2(mtcars, carb, cyl, "k", w = hp)
+#'
+#' as.data.frame(tab2(mtcars, cyl, carb, "k"))
+#' # aby uzyskać obiekt nadający się do wykorzystania
+#' # jako źródło danych do wykresu tworzonego przy pomocy pakietu ggplot2:
+#' dplyr::as_tibble(tab2(mtcars, cyl, carb, "k"), usunSuma = TRUE)
+#' # lub
+#' dplyr::as_tibble(tab2(mtcars, cyl, carb, "k"), usunSuma = TRUE, usunOgolem = TRUE)
 #' @name tab2
 #' @export
 tab2 = function(x, zmW, zmK, sumowanie, liczby, procenty, etykietaSuma,

@@ -1,7 +1,20 @@
 Do zrobienia:
 
--   funkcja do kable'owania (i kable'owania Extra) tabelek (rozbudować metody print?);
+-   funkcja do tworzenia "drukowalnych" układów tabelek;
 -   zbadać kompatybilność funkcji od etykiet z tymi z pakietu labels.
+
+------------------------------------------------------------------------
+
+# daneIBE 0.8.0 (7.05.2024)
+
+## Udoskonalenia
+
+-   Dodano opisowe komunikaty błędów, korzystając z możliwości zaimplementowanej (w funkcji `stopifnot()`) w R 4.0.0. W konsekwencji odpowiednio zmieniono zależność pakietu.
+
+## Inne zmiany
+
+-   Dostosowano plik licencji do wymagań CRANu.
+-   Skopiowano przykłady użycia z README.md do sekcji "examples" w dokumentacjach poszczególnych funkcji, co zapewnia (absolutnie) minimalny poziom testowania pakietu.
 
 ------------------------------------------------------------------------
 

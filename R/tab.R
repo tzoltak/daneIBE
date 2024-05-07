@@ -19,6 +19,22 @@
 #' obliczaniu rozkładu
 #' @return \code{data.frame} (klasy \code{tab_lbl}) z rozkładami
 #' @name tab
+#' @examples
+#' # example code
+#' tab(mtcars$cyl)
+#' tab(mtcars, cyl)
+#' tab(mtcars, cyl, etykietaSuma = "Sum")
+#'
+#' mtcars$cyl = haven::labelled(mtcars$cyl,
+#'                              c("cztery" = 4, "sześć" = 6, "osiem" = 8),
+#'                              "liczba cylindrów")
+#' tab(mtcars, cyl)
+#'
+#' mtcarsSvy = survey::svydesign(~1, 1, data = mtcars)
+#' tab(mtcarsSvy, cyl)
+#'
+#' mtcarsSrv = srvyr::as_survey(mtcarsSvy)
+#' tab(mtcarsSrv, cyl)
 #' @export
 tab = function(x, ..., procenty = TRUE, suma = TRUE, etykietaSuma, etykietaBD) {
   UseMethod("tab", x)
