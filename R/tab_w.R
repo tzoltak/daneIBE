@@ -17,11 +17,12 @@
 #' @param x ramka danych lub obiekt klasy \code{tbl_svy}
 #' @param wybrane wektor wartości, które wskazują na to, że pozycja została
 #' wybrana (jego elementami mogą być ciągi znaków, nazwy podawane jako wyrażenia
-#' języka oraz selektory z pakietu \emph{dplyr}, np. \code{\link{starts_with}})
+#' języka oraz selektory z pakietu \emph{dplyr}, np.
+#' \code{\link[dplyr]{starts_with}})
 #' @param wyklucz wektor wartości, które \strong{nie} powinny być wliczane do
 #' podstawy procentowania (jego elementami mogą być ciągi znaków, nazwy podawane
 #' jako wyrażenia języka oraz selektory z pakietu \emph{dplyr}, np.
-#' \code{\link{starts_with}})
+#' \code{\link[dplyr]{starts_with}})
 #' @param kierunek w którą stronę mają układać się w zwracanym zestawieniu
 #' pozycje kafeterii?
 #' @param liczby wartość logiczna - czy zwracana tabela ma zawierać rozkłady
@@ -50,7 +51,7 @@
 #'         w postacie \emph{szerokiej}.}
 #' }
 #' @examples
-#' polprodukt = tab_n(przykladWO, starts_with("P1_"))
+#' polprodukt = tab_n(przykladWO, dplyr::starts_with("P1_"))
 #' polprodukt
 #'
 #' tab_w(polprodukt, "T")

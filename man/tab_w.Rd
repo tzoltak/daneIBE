@@ -22,12 +22,13 @@ tab_w(
 
 \item{wybrane}{wektor wartości, które wskazują na to, że pozycja została
 wybrana (jego elementami mogą być ciągi znaków, nazwy podawane jako wyrażenia
-języka oraz selektory z pakietu \emph{dplyr}, np. \code{\link{starts_with}})}
+języka oraz selektory z pakietu \emph{dplyr}, np.
+\code{\link[dplyr]{starts_with}})}
 
 \item{wyklucz}{wektor wartości, które \strong{nie} powinny być wliczane do
 podstawy procentowania (jego elementami mogą być ciągi znaków, nazwy podawane
 jako wyrażenia języka oraz selektory z pakietu \emph{dplyr}, np.
-\code{\link{starts_with}})}
+\code{\link[dplyr]{starts_with}})}
 
 \item{kierunek}{w którą stronę mają układać się w zwracanym zestawieniu
 pozycje kafeterii?}
@@ -81,7 +82,7 @@ dawałoby się bezproblemowo używać w połączeniu z funkcją
 metodę \code{as.data.frame} na przekazywanym jej obiekcie).
 }
 \examples{
-polprodukt = tab_n(przykladWO, starts_with("P1_"))
+polprodukt = tab_n(przykladWO, dplyr::starts_with("P1_"))
 polprodukt
 
 tab_w(polprodukt, "T")
